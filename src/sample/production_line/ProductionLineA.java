@@ -2,6 +2,7 @@ package sample.production_line;
 
 import javafx.scene.text.Text;
 import sample.Controller;
+import sample.material.AbsMaterial;
 import sample.material.Salt;
 import sample.task.GeneralTask;
 import sample.task.MakeBread;
@@ -9,9 +10,7 @@ import sample.task.TaskProduct;
 import sample.warehouse.LocalWarehouse;
 import sample.warehouse.Warehouse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class ProductionLineA implements ProductionLine {
 
@@ -54,9 +53,24 @@ public class ProductionLineA implements ProductionLine {
         List<TaskProduct> taskProducts = new ArrayList<>();
         for (int i = 0; i < makeBreadTasksToStart.size(); i++) {
             MakeBread makeBread = makeBreadTasksToStart.get(i);
-            if (localWarehouse.provideQuantityOfOneMaterial(new Salt()) >=
-                    makeBreadTasksToStart.get(i).getMaterialsRequired().get(new Salt()));
-            System.out.println(makeBread);
+            Iterator hmIterator = makeBread.getMaterialsRequired().entrySet().iterator();
+            while (hmIterator.hasNext()) {
+                Map.Entry<AbsMaterial, Integer> mapElement = (Map.Entry) hmIterator.next();
+                System.out.println(this.getClass().getSimpleName() + " wants " + mapElement.getKey().getName() + " in" +
+                        " quantity " + mapElement.getValue());
+                Integer providedQuantity = localWarehouse.provideMultipleMaterials(mapElement.getKey(),
+                        mapElement.getValue());
+                if (providedQuantity == 0) {
+                    System.out.println("Local warehouse is out of stock for material "  + mapElement.getKey().getName());
+                    System.out.println("Contacting distant warehouse to get required items");
+                    break;
+                }
+            }
+//            makeBread.getMaterialsRequired().forEach((key, value) -> {
+//                        localWarehouse.provideQuantityOfOneMaterial(key)
+//                        System.out.println(key.getName() + value));
+//                    }
+
             controller.vBox3.getChildren().add(new Text(makeBread.getName()));
         }
         return taskProducts;

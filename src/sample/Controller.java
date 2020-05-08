@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import sample.production_line.ProductionLine;
 import sample.production_line.ProductionLineA;
 import sample.task.*;
+import sample.warehouse.LocalWarehouse;
 
 import java.util.*;
 
@@ -54,6 +55,7 @@ public class Controller {
     List<MakeBread> makeBreadToDoList = new ArrayList<>();
     Map<String,Integer> mapReduceOfTasks = new HashMap<>();
 
+    LocalWarehouse localWarehouse = new LocalWarehouse();
 
     @FXML
     Button button1 = new Button();
@@ -94,7 +96,7 @@ public class Controller {
 //        Queue<GeneralTask> taskQueue = new LinkedList<>();
 //        taskQueue.addAll(tasks);
         if (!tasks.isEmpty()) {
-            productionLine.processMultipleMakeBreadTasks(tasks, this);
+            productionLine.processMultipleMakeBreadTasks(tasks, this, localWarehouse);
         }
     }
 

@@ -7,12 +7,12 @@ import java.util.List;
 public class DistantWarehouse implements Warehouse {
 
     @Override
-    public AbsMaterial provideOneMaterial(AbsMaterial generalMaterial, int secondsOfDelay) {
+    public Integer provideQuantityOfOneMaterial(AbsMaterial generalMaterial) {
         return null;
     }
 
     @Override
-    public List<AbsMaterial> provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems, int secondsOfDelay) {
+    public Integer provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems) {
         return null;
     }
 }

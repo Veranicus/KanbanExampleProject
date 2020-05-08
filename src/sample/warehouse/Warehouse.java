@@ -8,7 +8,7 @@ public interface Warehouse {
 
     Integer provideQuantityOfOneMaterial(AbsMaterial generalMaterial);
 
-    List<AbsMaterial> provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems);
+    Integer provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems);
 
 
 }
