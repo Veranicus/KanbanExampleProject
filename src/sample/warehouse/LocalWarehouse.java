@@ -6,7 +6,6 @@ import sample.material.Salt;
 import sample.material.Water;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //Local warehouse which is programmed to have some initial number of materials for the tasks which can be brought
@@ -27,7 +26,7 @@ public class LocalWarehouse implements Warehouse {
         this.localIngredients = new HashMap<>();
         localIngredients.put(new Flour(), 3);
         localIngredients.put(new Salt(), 1);
-        localIngredients.put(new Water(), 2);
+        localIngredients.put(new Water(), 3);
     }
 
     @Override
