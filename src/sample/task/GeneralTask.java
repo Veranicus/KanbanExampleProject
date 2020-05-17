@@ -1,6 +1,7 @@
 package sample.task;
 
 import sample.material.AbsMaterial;
+import sample.task.task_product.TaskProduct;
 
 import java.util.Map;
 
@@ -58,13 +59,15 @@ public class GeneralTask implements Task {
 
         if (quantityToProduce != that.quantityToProduce) return false;
         if (!name.equals(that.name)) return false;
-        return typeOfTasksProduct.equals(that.typeOfTasksProduct);
+        if (!typeOfTasksProduct.equals(that.typeOfTasksProduct)) return false;
+        return materialsRequired.equals(that.materialsRequired);
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + typeOfTasksProduct.hashCode();
+        result = 31 * result + materialsRequired.hashCode();
         result = 31 * result + quantityToProduce;
         return result;
     }

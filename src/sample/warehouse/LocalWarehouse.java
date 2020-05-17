@@ -1,9 +1,6 @@
 package sample.warehouse;
 
-import sample.material.AbsMaterial;
-import sample.material.Flour;
-import sample.material.Salt;
-import sample.material.Water;
+import sample.material.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +24,8 @@ public class LocalWarehouse implements Warehouse {
         localIngredients.put(new Flour(), 3);
         localIngredients.put(new Salt(), 1);
         localIngredients.put(new Water(), 3);
+        localIngredients.put(new Egg(), 3);
+        localIngredients.put(new Onion(), 1);
     }
 
     @Override

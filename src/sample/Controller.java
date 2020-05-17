@@ -7,14 +7,26 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import sample.production_line.ProductionLine;
 import sample.production_line.ProductionLineA;
-import sample.task.*;
+import sample.production_line.ProductionLineB;
+import sample.production_line.TaskPlanner;
+import sample.task.GeneralTask;
+import sample.task.MakeBread;
+import sample.task.MakeOmellete;
+import sample.task.TaskNames;
+import sample.task.task_product.Bread;
+import sample.task.task_product.Omelette;
+import sample.task.task_product.TaskProduct;
+import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class Controller {
     @FXML
@@ -43,7 +55,11 @@ public class Controller {
     public Button button5add;
     public VBox vBox2;
     public VBox vBoxStart;
+    @FXML
     public VBox vBox3;
+    public ScrollPane scrollPane3;
+    @FXML
+    public Text textShow1;
 
     Stack<Text> task1Display = new Stack<>();
     Stack<Text> task2Display = new Stack<>();
@@ -51,11 +67,12 @@ public class Controller {
     Stack<Text> task4Display = new Stack<>();
     Stack<Text> task5Display = new Stack<>();
 
-    Queue<GeneralTask> generalQueue = new LinkedList<>();
-    List<MakeBread> makeBreadToDoList = new ArrayList<>();
-    Map<String,Integer> mapReduceOfTasks = new HashMap<>();
+    List<GeneralTask> makeBreadToDoList = new ArrayList<>();
+    List<GeneralTask> makeOmeletteToDoList = new ArrayList<>();
 
     LocalWarehouse localWarehouse = new LocalWarehouse();
+    DistantWarehouse distantWarehouse = new DistantWarehouse();
+    TaskPlanner taskPlanner = new TaskPlanner();
 
     @FXML
     Button button1 = new Button();
@@ -69,55 +86,56 @@ public class Controller {
         vBox2.getChildren().addAll(task3Display);
         vBox2.getChildren().addAll(task4Display);
         vBox2.getChildren().addAll(task5Display);
+        System.out.println(task2Display);
         taskThread.start();
-        for (MakeBread g : makeBreadToDoList) {
-            System.out.println(g);
-        }
-        System.out.println(mapReduceOfTasks.values());
-        System.out.println(mapReduceOfTasks.keySet());
     }
 
-    public void turnTextStackIntoQueOfTasks(Stack<Text> currentTexts,
-                                            TaskProduct taskProduct) {
+    public synchronized void turnTextStackIntoQueOfTasks(Stack<Text> currentTexts,
+                                                         TaskProduct taskProduct) {
         if (!currentTexts.isEmpty()) {
             if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("bread")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
-                    mapReduceOfTasks.put("MakeBread",1);
                     makeBreadToDoList.add(new MakeBread(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeBreadToDoList.get(i));
                 }
-                vBox2.getChildren().removeAll(currentTexts);
+                if (!vBox2.getChildren().isEmpty()) {
+                    vBox2.getChildren().removeAll(currentTexts);
+                }
+            } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("omelette")) {
+                for (int i = 0; i < currentTexts.size(); i++) {
+                    makeOmeletteToDoList.add(new MakeOmellete(currentTexts.get(i).getText(),
+                            taskProduct, 1));
+                    System.out.println(makeOmeletteToDoList.get(i));
+                }
+                if (!vBox2.getChildren().isEmpty()) {
+                    vBox2.getChildren().removeAll(currentTexts);
+                }
             }
         }
     }
 
-    public void beginWorkingOnBreadTasks(List<MakeBread> tasks, ProductionLine productionLine) {
+    public void beginWorkingOnGeneralTask(List<GeneralTask> tasks, ProductionLine productionLine) {
 //        Queue<GeneralTask> taskQueue = new LinkedList<>();
 //        taskQueue.addAll(tasks);
         if (!tasks.isEmpty()) {
-            productionLine.processMultipleMakeBreadTasks(tasks, this, localWarehouse);
+            productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, taskPlanner);
         }
     }
 
-    Thread taskThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            double progress = 0;
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        turnTextStackIntoQueOfTasks(task1Display, new Bread());
-                        beginWorkingOnBreadTasks(makeBreadToDoList, new ProductionLineA());
-                    }
-                });
-
+    Thread taskThread = new Thread(() -> {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        Platform.runLater(() -> {
+            turnTextStackIntoQueOfTasks(task1Display, new Bread());
+            turnTextStackIntoQueOfTasks(task2Display, new Omelette());
+            beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
+            beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
+        });
+
     });
 
     @FXML

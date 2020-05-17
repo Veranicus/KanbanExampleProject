@@ -1,4 +1,4 @@
-package sample.task;
+package sample.task.task_product;
 
 public interface TaskProduct {
 

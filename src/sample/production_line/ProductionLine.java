@@ -1,21 +1,18 @@
 package sample.production_line;
 
+import javafx.scene.text.Text;
 import sample.Controller;
 import sample.task.GeneralTask;
-import sample.task.MakeBread;
-import sample.task.TaskProduct;
-import sample.warehouse.Warehouse;
+import sample.warehouse.DistantWarehouse;
+import sample.warehouse.LocalWarehouse;
 
 import java.util.List;
-import java.util.Queue;
 
 public interface ProductionLine {
 
-    List<TaskProduct> processTask(GeneralTask generalTaskToStart);
-
-    List<TaskProduct> processMultipleMakeBreadTasks(List<MakeBread> makeBreadTasksToStart, Controller controller,
-                                                    Warehouse warehouse);
-
+    List<Text> processMultipleTasks(List<GeneralTask> makeBreadTasksToStart, Controller controller,
+                                    LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse,
+                                    TaskPlanner taskPlanner);
 
 
 }

@@ -11,17 +11,16 @@ import sample.warehouse.LocalWarehouse;
 
 import java.util.*;
 
-public class ProductionLineA implements ProductionLine {
-
+public class ProductionLineB implements ProductionLine {
     private Queue<GeneralTask> queuedTasksProductionLineA;
 
-    private static final String productionLineName = "Production Line A";
+    private static final String productionLineName = "Production Line B";
     DelayUtil d = new DelayUtil();
 
-    public ProductionLineA() {
+    public ProductionLineB() {
     }
 
-    public ProductionLineA(Queue<GeneralTask> queuedTasksProductionLineA) {
+    public ProductionLineB(Queue<GeneralTask> queuedTasksProductionLineA) {
         this.queuedTasksProductionLineA = queuedTasksProductionLineA;
     }
 
@@ -37,7 +36,7 @@ public class ProductionLineA implements ProductionLine {
         return productionLineName;
     }
 
-    public void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller) {
+    public void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller, TaskPlanner taskPlanner) {
         new Thread(() -> {
             for (Text text : listOfTaskForFinish) {
                 try {
@@ -69,7 +68,7 @@ public class ProductionLineA implements ProductionLine {
             processedTasks.add((new Text(generalTask.getName())));
         }
 
-//        finishMultipleTasks(processedTasks, controller);
+//        finishMultipleTasks(processedTasks, controller, taskPlanner);
         taskPlanner.finishMultipleTasks(processedTasks, controller);
         return processedTasks;
     }
@@ -94,9 +93,7 @@ public class ProductionLineA implements ProductionLine {
                 double waitingTime = DelayUtil.getRandomDoubleBetweenRange(1000, 1500);
                 System.out.println(". Waiting time: " + waitingTime / 1000 + " seconds.");
                 d.delay((long) waitingTime);
-
             }
         }
     }
-
 }
