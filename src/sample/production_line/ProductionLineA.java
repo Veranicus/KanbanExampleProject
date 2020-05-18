@@ -38,22 +38,6 @@ public class ProductionLineA implements ProductionLine {
         return productionLineName;
     }
 
-//    public void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller) {
-//        new Thread(() -> {
-//            for (Text text : listOfTaskForFinish) {
-//                try {
-//                    long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(500, 1500);
-//                    System.out.println(this.getClass().getSimpleName() + " Production time of " + text.getText()
-//                            + " is " + productionTime);
-//                    Thread.sleep(productionTime);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                Platform.runLater(() -> controller.vBox3.getChildren().add(text));// Update on JavaFX Application Thread
-//                System.out.println("Finished");
-//            }
-//        }).start();
-//    }
 
     @Override
     public List<Text> processMultipleTasks(List<GeneralTask> TasksToStart, Controller controller,
@@ -97,7 +81,7 @@ public class ProductionLineA implements ProductionLine {
                         mapElement.getValue() - providedQuantity);
                 double waitingTime = DelayUtil.getRandomDoubleBetweenRange(1000, 1500);
                 System.out.println(". Waiting time: " + waitingTime / 1000 + " seconds.");
-                d.delay((long) waitingTime);
+//                d.delay((long) waitingTime);
 //                Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(oneGeneralTask.getName())));
             }
         }

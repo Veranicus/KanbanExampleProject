@@ -41,6 +41,7 @@ public class Controller {
     public CheckBox checkBox4;
     @FXML
     public CheckBox checkBox5;
+
     @FXML
     public VBox vBox1;
     public Button button1remove;
@@ -116,8 +117,6 @@ public class Controller {
     }
 
     public void beginWorkingOnGeneralTask(List<GeneralTask> tasks, ProductionLine productionLine) {
-//        Queue<GeneralTask> taskQueue = new LinkedList<>();
-//        taskQueue.addAll(tasks);
         if (!tasks.isEmpty()) {
             productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, taskPlanner);
         }

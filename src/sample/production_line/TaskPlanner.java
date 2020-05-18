@@ -30,20 +30,25 @@ public class TaskPlanner extends Task {
 
 
     public synchronized void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller) {
-        new Thread(() -> {
-            for (Text text : listOfTaskForFinish) {
-                try {
-                    long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(2000, 2500);
-                    System.out.println(this.getClass().getSimpleName() + " Production time of " + text.getText()
-                            + " is " + productionTime);
-                    Thread.sleep(productionTime);
-                    Platform.runLater(() -> controller.vBox3.getChildren().add(text));// Update on JavaFX Application Thread
-                    System.out.println("Finished");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        try {
+
+            new Thread(() -> {
+                for (Text text : listOfTaskForFinish) {
+                    try {
+                        long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(2000, 2500);
+                        System.out.println(this.getClass().getSimpleName() + " Production time of " + text.getText()
+                                + " is " + productionTime);
+                        Thread.sleep(productionTime);
+                        Platform.runLater(() -> controller.vBox3.getChildren().add(text));// Update on JavaFX Application Thread
+                        System.out.println("Finished");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+            }).join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -36,23 +36,6 @@ public class ProductionLineB implements ProductionLine {
     public static String getProductionLineName() {
         return productionLineName;
     }
-//
-//    public void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller, TaskPlanner taskPlanner) {
-//        new Thread(() -> {
-//            for (Text text : listOfTaskForFinish) {
-//                try {
-//                    long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(500, 1500);
-//                    System.out.println(this.getClass().getSimpleName() + " Production time of " + text.getText()
-//                            + " is " + productionTime);
-//                    Thread.sleep(productionTime);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                Platform.runLater(() -> controller.vBox3.getChildren().add(text));// Update on JavaFX Application Thread
-//                System.out.println("Finished");
-//            }
-//        }).start();
-//    }
 
     @Override
     public List<Text> processMultipleTasks(List<GeneralTask> TasksToStart, Controller controller,
@@ -66,7 +49,7 @@ public class ProductionLineB implements ProductionLine {
             readyMaterialsForOneTask(generalTask, localWarehouse, distantWarehouse, i, controller);
             System.out.println("\n************** " + generalTask.getName() + " " + i + " Have all required materials" +
                     " ***************");
-            processedTasks.add((new Text(generalTask.getName())));
+            processedTasks.add(new Text(TasksToStart.get(i).getName()));
         }
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
@@ -75,9 +58,9 @@ public class ProductionLineB implements ProductionLine {
         return processedTasks;
     }
 
-    private void readyMaterialsForOneTask(GeneralTask oneGeneralTask, LocalWarehouse localWarehouse,
-                                          DistantWarehouse distantWarehouse, int indexOfTask, Controller controller) {
 
+    private synchronized void readyMaterialsForOneTask(GeneralTask oneGeneralTask, LocalWarehouse localWarehouse,
+                                                       DistantWarehouse distantWarehouse, int indexOfTask, Controller controller) {
         Iterator hmIterator = oneGeneralTask.getMaterialsRequired().entrySet().iterator();
         while (hmIterator.hasNext()) {
             Map.Entry<AbsMaterial, Integer> mapElement = (Map.Entry) hmIterator.next();
@@ -92,11 +75,16 @@ public class ProductionLineB implements ProductionLine {
                 distantWarehouse.setNumberOfItems(mapElement.getValue() - providedQuantity);
                 distantWarehouse.provideMultipleMaterials(mapElement.getKey(),
                         mapElement.getValue() - providedQuantity);
-                double waitingTime = DelayUtil.getRandomDoubleBetweenRange(1000, 1500);
-                System.out.println(". Waiting time: " + waitingTime / 1000 + " seconds.");
-                d.delay((long) waitingTime);
-//                Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(oneGeneralTask.getName())));
+                double waitingTime = DelayUtil.getRandomDoubleBetweenRange(2000, 2500);
+                new Thread(() -> {
+                    try {
+                        System.out.println(". Waiting time: " + waitingTime / 1000 + " seconds.");
+                        Thread.sleep((long) waitingTime);
+                    } catch (InterruptedException e) {
+                    }
+                }).start();
             }
         }
     }
 }
+
