@@ -1,15 +1,15 @@
 package sample.production_line;
 
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 //Class for scheduling and planning of task, used by production lines
-public class TaskPlanner extends Task {
+public class TaskPlanner implements Callable<Object> {
 
     private List<Text> listOfTaskForFinish;
     private Controller controller;
@@ -23,7 +23,7 @@ public class TaskPlanner extends Task {
     }
 
     @Override
-    protected Object call() throws Exception {
+    public Object call() throws Exception {
         finishMultipleTasks(this.listOfTaskForFinish, this.controller);
         return null;
     }
@@ -31,7 +31,6 @@ public class TaskPlanner extends Task {
 
     public synchronized void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller) {
         try {
-
             new Thread(() -> {
                 for (Text text : listOfTaskForFinish) {
                     try {

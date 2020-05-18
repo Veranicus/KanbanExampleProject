@@ -57,7 +57,7 @@ public class ProductionLineA implements ProductionLine {
 //        finishMultipleTasks(processedTasks, controller);
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         TaskPlanner taskPlanner1 = new TaskPlanner(processedTasks, controller);
-        executorService.execute(taskPlanner1);
+//        executorService.execute(taskPlanner1);
 //        taskPlanner.finishMultipleTasks(processedTasks, controller);
         return processedTasks;
     }
@@ -81,8 +81,6 @@ public class ProductionLineA implements ProductionLine {
                         mapElement.getValue() - providedQuantity);
                 double waitingTime = DelayUtil.getRandomDoubleBetweenRange(1000, 1500);
                 System.out.println(". Waiting time: " + waitingTime / 1000 + " seconds.");
-//                d.delay((long) waitingTime);
-//                Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(oneGeneralTask.getName())));
             }
         }
     }
