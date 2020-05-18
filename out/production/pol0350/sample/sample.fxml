@@ -17,17 +17,17 @@
             <Font size="17.0" />
          </font>
       </Text>
-      <VBox fx:id="vBoxStart" layoutX="1006.0" layoutY="150.0" prefHeight="200.0" prefWidth="100.0" spacing="2.0">
-         <children>
-            <HBox prefHeight="38.0" prefWidth="75.0" spacing="5.0">
-               <children>
-                  <Button fx:id="button1remove" mnemonicParsing="false" onAction="#buttonClickedRemove1" text="-" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choice 1">
-                     <HBox.margin>
-                        <Insets top="5.0" />
-                     </HBox.margin>
-                  </Text>
-                  <Button fx:id="button1add" mnemonicParsing="false" onAction="#buttonClickedAdd1" text="+" />
+       <VBox fx:id="vBoxStart" layoutX="1006.0" layoutY="150.0" prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+           <children>
+               <HBox prefHeight="38.0" prefWidth="75.0" spacing="5.0">
+                   <children>
+                       <Button fx:id="button1remove" mnemonicParsing="false" onAction="#buttonClickedRemove1" text="-" />
+                       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choice 1">
+                           <HBox.margin>
+                               <Insets top="5.0" />
+                           </HBox.margin>
+                       </Text>
+                       <Button fx:id="button1add" mnemonicParsing="false" onAction="#buttonClickedAdd1" text="+" />
                </children>
             </HBox>
             <HBox prefHeight="38.0" prefWidth="75.0" spacing="5.0">
@@ -98,32 +98,31 @@
             <VBox fx:id="vBox2" prefHeight="541.0" prefWidth="192.0" />
          </content>
       </ScrollPane>
-      <Text layoutX="312.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To Do">
-         <font>
-            <Font size="17.0" />
-         </font>
-      </Text>
-      <Text layoutX="528.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="In Progress">
-         <font>
-            <Font size="17.0" />
-         </font>
-      </Text>
+       <Text layoutX="312.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To Do">
+           <font>
+               <Font size="17.0" />
+           </font>
+       </Text>
+       <Text layoutX="528.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="In Progress">
+           <font>
+               <Font size="17.0" />
+           </font>
+       </Text>
        <ScrollPane fx:id="scrollPane3" layoutX="512.0" layoutY="150.0" prefHeight="553.0" prefWidth="200.0">
            <content>
                <VBox fx:id="vBox3" prefHeight="541.0" prefWidth="192.0" />
            </content>
        </ScrollPane>
-      <ScrollPane layoutX="738.0" layoutY="150.0" prefHeight="553.0" prefWidth="200.0">
-         <content>
-            <VBox fx:id="vBox4" prefHeight="541.0" prefWidth="192.0" />
-         </content>
-      </ScrollPane>
-      <Text layoutX="754.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Done">
-         <font>
-            <Font size="17.0" />
-         </font>
-      </Text>
-      <Text fx:id="textShow1" layoutX="53.0" layoutY="743.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+       <ScrollPane layoutX="738.0" layoutY="150.0" prefHeight="553.0" prefWidth="200.0">
+           <content>
+               <VBox fx:id="vBox4" prefHeight="541.0" prefWidth="192.0" />
+           </content>
+       </ScrollPane>
+       <Text layoutX="754.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Done">
+           <font>
+               <Font size="17.0" />
+           </font>
+       </Text>
    </children>
    <effect>
       <Blend />

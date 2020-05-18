@@ -1,6 +1,5 @@
 package sample.production_line;
 
-import javafx.application.Platform;
 import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
@@ -10,6 +9,8 @@ import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ProductionLineB implements ProductionLine {
     private Queue<GeneralTask> queuedTasksProductionLineA;
@@ -35,23 +36,23 @@ public class ProductionLineB implements ProductionLine {
     public static String getProductionLineName() {
         return productionLineName;
     }
-
-    public void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller, TaskPlanner taskPlanner) {
-        new Thread(() -> {
-            for (Text text : listOfTaskForFinish) {
-                try {
-                    long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(500, 1500);
-                    System.out.println(this.getClass().getSimpleName() + " Production time of " + text.getText()
-                            + " is " + productionTime);
-                    Thread.sleep(productionTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Platform.runLater(() -> controller.vBox3.getChildren().add(text));// Update on JavaFX Application Thread
-                System.out.println("Finished");
-            }
-        }).start();
-    }
+//
+//    public void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller, TaskPlanner taskPlanner) {
+//        new Thread(() -> {
+//            for (Text text : listOfTaskForFinish) {
+//                try {
+//                    long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(500, 1500);
+//                    System.out.println(this.getClass().getSimpleName() + " Production time of " + text.getText()
+//                            + " is " + productionTime);
+//                    Thread.sleep(productionTime);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                Platform.runLater(() -> controller.vBox3.getChildren().add(text));// Update on JavaFX Application Thread
+//                System.out.println("Finished");
+//            }
+//        }).start();
+//    }
 
     @Override
     public List<Text> processMultipleTasks(List<GeneralTask> TasksToStart, Controller controller,
@@ -68,8 +69,9 @@ public class ProductionLineB implements ProductionLine {
             processedTasks.add((new Text(generalTask.getName())));
         }
 
-//        finishMultipleTasks(processedTasks, controller, taskPlanner);
-        taskPlanner.finishMultipleTasks(processedTasks, controller);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        TaskPlanner taskPlanner1 = new TaskPlanner(processedTasks, controller);
+        executorService.execute(taskPlanner1);
         return processedTasks;
     }
 
@@ -93,6 +95,7 @@ public class ProductionLineB implements ProductionLine {
                 double waitingTime = DelayUtil.getRandomDoubleBetweenRange(1000, 1500);
                 System.out.println(". Waiting time: " + waitingTime / 1000 + " seconds.");
                 d.delay((long) waitingTime);
+//                Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(oneGeneralTask.getName())));
             }
         }
     }

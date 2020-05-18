@@ -1,28 +1,35 @@
 package sample.production_line;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
 
 import java.util.List;
 
-//Class for scheduling and planning of task used by production lines
-public class TaskPlanner {
+//Class for scheduling and planning of task, used by production lines
+public class TaskPlanner extends Task {
 
-    volatile Boolean inProcess = false;
+    private List<Text> listOfTaskForFinish;
+    private Controller controller;
+
+    public TaskPlanner(List<Text> listOfTaskForFinish, Controller controller) {
+        this.listOfTaskForFinish = listOfTaskForFinish;
+        this.controller = controller;
+    }
+
+    public TaskPlanner() {
+    }
+
+    @Override
+    protected Object call() throws Exception {
+        finishMultipleTasks(this.listOfTaskForFinish, this.controller);
+        return null;
+    }
+
 
     public synchronized void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller) {
-        System.out.println(inProcess);
-//        while (inProcess = true) {
-//            try {
-//                wait();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        System.out.println(inProcess);
-        inProcess = true;
         new Thread(() -> {
             for (Text text : listOfTaskForFinish) {
                 try {
@@ -37,7 +44,6 @@ public class TaskPlanner {
                 }
             }
         }).start();
-        inProcess = false;
     }
 }
 
