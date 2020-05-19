@@ -19,6 +19,7 @@ public class TaskDisplay implements Callable {
 
     @Override
     public Object call() throws Exception {
+        System.out.println("IN PLATFORM RUN LATER ");
         Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(taskToShow.getName())));
         return null;
     }

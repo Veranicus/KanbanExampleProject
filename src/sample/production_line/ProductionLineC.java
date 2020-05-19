@@ -6,11 +6,12 @@ import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class ProductionLineC implements ProductionLine {
 
     @Override
     public void processMultipleTasks(List<GeneralTask> makeBreadTasksToStart, Controller controller,
-                                     LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse) {
+                                     LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse, ExecutorService pool) {
     }
 }

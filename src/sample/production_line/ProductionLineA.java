@@ -1,16 +1,16 @@
 package sample.production_line;
 
-import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
-import sample.material.AbsMaterial;
 import sample.task.GeneralTask;
 import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
-import java.util.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ProductionLineA implements ProductionLine {
 
@@ -59,48 +59,25 @@ public class ProductionLineA implements ProductionLine {
     }
 
     @Override
-    public void processMultipleTasks(List<GeneralTask> TasksToStart, Controller controller,
-                                     LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse) {
+    public void processMultipleTasks(List<GeneralTask> tasksWithMaterialsToFinish, Controller controller,
+                                     LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse, ExecutorService pool) {
+        Instant start = Instant.now();
+        // Build a fixed number of thread pool
+        try {
 
-        List<Text> processedTasks = new ArrayList<>();
-
-        for (int i = 0; i < TasksToStart.size(); i++) {
-            GeneralTask generalTask = TasksToStart.get(i);
-            readyMaterialsForOneTask(generalTask, localWarehouse, distantWarehouse, i);
-            System.out.println("\n************** " + generalTask.getName() + " " + i + " Have all required materials" +
-                    " ***************");
-            processedTasks.add((new Text(generalTask.getName())));
-        }
-
-//        finishMultipleTasks(processedTasks, controller);
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
-//        TaskPlanner taskPlanner1 = new TaskPlanner(processedTasks, controller);
-//        executorService.execute(taskPlanner1);
-//        taskPlanner.finishMultipleTasks(processedTasks, controller);
-//        return processedTasks;
-    }
-
-    private void readyMaterialsForOneTask(GeneralTask oneGeneralTask, LocalWarehouse localWarehouse,
-                                          DistantWarehouse distantWarehouse, int indexOfTask) {
-
-        Iterator hmIterator = oneGeneralTask.getMaterialsRequired().entrySet().iterator();
-        while (hmIterator.hasNext()) {
-            Map.Entry<AbsMaterial, Integer> mapElement = (Map.Entry) hmIterator.next();
-            System.out.println(this.getClass().getSimpleName() + " wants " + mapElement.getKey().getName() + " in" +
-                    " quantity " + mapElement.getValue() + " for task " + oneGeneralTask.getName() + " " + indexOfTask);
-            Integer providedQuantity = localWarehouse.provideMultipleMaterials(mapElement.getKey(),
-                    mapElement.getValue());
-            if (providedQuantity < mapElement.getValue()) {
-                System.out.println("Local warehouse is out of stock for material " + mapElement.getKey().getName());
-                System.out.println("Contacting distant warehouse to get required items");
-                distantWarehouse.setAbsMaterial(mapElement.getKey());
-                distantWarehouse.setNumberOfItems(mapElement.getValue() - providedQuantity);
-                distantWarehouse.provideMultipleMaterials(mapElement.getKey(),
-                        mapElement.getValue() - providedQuantity);
-                double waitingTime = DelayUtil.getRandomDoubleBetweenRange(1000, 1500);
-                System.out.println(". Waiting time: " + waitingTime / 1000 + " seconds.");
+            for (GeneralTask g : tasksWithMaterialsToFinish) {
+                GeneralTask generalTaskToCalculate = pool.submit(new ResourceCalculator(tasksWithMaterialsToFinish, controller,
+                        localWarehouse, distantWarehouse, g)).get();
+                GeneralTask generalTaskToShow = pool.submit(new TaskPlanner(generalTaskToCalculate, controller)).get();
+                pool.submit(new TaskDisplay(generalTaskToShow, controller));
             }
+            Instant end = Instant.now();
+            System.out.println("***** Total Time to proces" + tasksWithMaterialsToFinish.get(1).getName() + " Group of tasks is " +
+                    Duration.between(start, end).toMillis() + "********");
+        } catch (Exception E) {
+            E.printStackTrace();
         }
     }
+
 
 }

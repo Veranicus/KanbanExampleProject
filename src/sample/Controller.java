@@ -27,6 +27,8 @@ import sample.warehouse.LocalWarehouse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Controller {
     @FXML
@@ -70,6 +72,8 @@ public class Controller {
 
     List<GeneralTask> makeBreadToDoList = new ArrayList<>();
     List<GeneralTask> makeOmeletteToDoList = new ArrayList<>();
+    int n = 10;
+    ExecutorService pool = Executors.newWorkStealingPool();
 
     LocalWarehouse localWarehouse = new LocalWarehouse();
     DistantWarehouse distantWarehouse = new DistantWarehouse();
@@ -88,7 +92,20 @@ public class Controller {
         vBox2.getChildren().addAll(task4Display);
         vBox2.getChildren().addAll(task5Display);
         System.out.println(task2Display);
+        Thread taskThread = new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                turnTextStackIntoQueOfTasks(task1Display, new Bread());
+                turnTextStackIntoQueOfTasks(task2Display, new Omelette());
+                beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
+                beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
+            } catch (InterruptedException f) {
+                f.printStackTrace();
+            }
+        });
         taskThread.start();
+
+//        taskThread.start();
     }
 
     public synchronized void turnTextStackIntoQueOfTasks(Stack<Text> currentTexts,
@@ -101,7 +118,9 @@ public class Controller {
                     System.out.println(makeBreadToDoList.get(i));
                 }
                 if (!vBox2.getChildren().isEmpty()) {
-                    vBox2.getChildren().removeAll(currentTexts);
+                    Platform.runLater(() -> {
+                        vBox2.getChildren().removeAll(currentTexts);
+                    });
                 }
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("omelette")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
@@ -109,17 +128,16 @@ public class Controller {
                             taskProduct, 1));
                     System.out.println(makeOmeletteToDoList.get(i));
                 }
-                if (!vBox2.getChildren().isEmpty()) {
+                Platform.runLater(() -> {
                     vBox2.getChildren().removeAll(currentTexts);
-                }
+                });
             }
         }
     }
 
     public void beginWorkingOnGeneralTask(List<GeneralTask> tasks, ProductionLine productionLine) {
         if (!tasks.isEmpty()) {
-            ProductionLine productionLine1 = new ProductionLineB();
-            productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse);
+            productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, pool);
 
         }
     }
@@ -127,6 +145,8 @@ public class Controller {
     Thread taskThread = new Thread(() -> {
         try {
             Thread.sleep(1000);
+            beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
+            beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
