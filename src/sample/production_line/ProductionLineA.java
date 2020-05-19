@@ -19,6 +19,26 @@ public class ProductionLineA implements ProductionLine {
     private static final String productionLineName = "Production Line A";
     DelayUtil d = new DelayUtil();
 
+    private List<GeneralTask> TasksToStart;
+    private Controller controller;
+    private LocalWarehouse localWarehouse;
+    private DistantWarehouse distantWarehouse;
+    private TaskPlanner taskPlanner;
+    private GeneralTask onetaskToStart;
+
+    public ProductionLineA(Queue<GeneralTask> queuedTasksProductionLineA, DelayUtil d, List<GeneralTask> tasksToStart,
+                           Controller controller, LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse,
+                           TaskPlanner taskPlanner, GeneralTask onetaskToStart) {
+        this.queuedTasksProductionLineA = queuedTasksProductionLineA;
+        this.d = d;
+        TasksToStart = tasksToStart;
+        this.controller = controller;
+        this.localWarehouse = localWarehouse;
+        this.distantWarehouse = distantWarehouse;
+        this.taskPlanner = taskPlanner;
+        this.onetaskToStart = onetaskToStart;
+    }
+
     public ProductionLineA() {
     }
 
@@ -38,17 +58,15 @@ public class ProductionLineA implements ProductionLine {
         return productionLineName;
     }
 
-
     @Override
-    public List<Text> processMultipleTasks(List<GeneralTask> TasksToStart, Controller controller,
-                                           LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse,
-                                           TaskPlanner taskPlanner) {
+    public void processMultipleTasks(List<GeneralTask> TasksToStart, Controller controller,
+                                     LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse) {
 
         List<Text> processedTasks = new ArrayList<>();
 
         for (int i = 0; i < TasksToStart.size(); i++) {
             GeneralTask generalTask = TasksToStart.get(i);
-            readyMaterialsForOneTask(generalTask, localWarehouse, distantWarehouse, i, controller);
+            readyMaterialsForOneTask(generalTask, localWarehouse, distantWarehouse, i);
             System.out.println("\n************** " + generalTask.getName() + " " + i + " Have all required materials" +
                     " ***************");
             processedTasks.add((new Text(generalTask.getName())));
@@ -56,14 +74,14 @@ public class ProductionLineA implements ProductionLine {
 
 //        finishMultipleTasks(processedTasks, controller);
         ExecutorService executorService = Executors.newFixedThreadPool(1);
-        TaskPlanner taskPlanner1 = new TaskPlanner(processedTasks, controller);
+//        TaskPlanner taskPlanner1 = new TaskPlanner(processedTasks, controller);
 //        executorService.execute(taskPlanner1);
 //        taskPlanner.finishMultipleTasks(processedTasks, controller);
-        return processedTasks;
+//        return processedTasks;
     }
 
     private void readyMaterialsForOneTask(GeneralTask oneGeneralTask, LocalWarehouse localWarehouse,
-                                          DistantWarehouse distantWarehouse, int indexOfTask, Controller controller) {
+                                          DistantWarehouse distantWarehouse, int indexOfTask) {
 
         Iterator hmIterator = oneGeneralTask.getMaterialsRequired().entrySet().iterator();
         while (hmIterator.hasNext()) {

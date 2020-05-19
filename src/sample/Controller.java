@@ -118,7 +118,9 @@ public class Controller {
 
     public void beginWorkingOnGeneralTask(List<GeneralTask> tasks, ProductionLine productionLine) {
         if (!tasks.isEmpty()) {
-            productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, taskPlanner);
+            ProductionLine productionLine1 = new ProductionLineB();
+            productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse);
+
         }
     }
 

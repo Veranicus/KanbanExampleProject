@@ -1,21 +1,19 @@
 package sample.production_line;
 
-import javafx.application.Platform;
-import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
+import sample.task.GeneralTask;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 
 //Class for scheduling and planning of task, used by production lines
-public class TaskPlanner implements Callable<Object> {
+public class TaskPlanner implements Callable<GeneralTask> {
 
-    private List<Text> listOfTaskForFinish;
+    private GeneralTask oneTaskToFinish;
     private Controller controller;
 
-    public TaskPlanner(List<Text> listOfTaskForFinish, Controller controller) {
-        this.listOfTaskForFinish = listOfTaskForFinish;
+    public TaskPlanner(GeneralTask oneTaskToFinish, Controller controller) {
+        this.oneTaskToFinish = oneTaskToFinish;
         this.controller = controller;
     }
 
@@ -23,31 +21,16 @@ public class TaskPlanner implements Callable<Object> {
     }
 
     @Override
-    public Object call() throws Exception {
-        finishMultipleTasks(this.listOfTaskForFinish, this.controller);
-        return null;
+    public GeneralTask call() throws Exception {
+        Thread.sleep(finishMultipleTasks(oneTaskToFinish));
+        return oneTaskToFinish;
     }
 
-
-    public synchronized void finishMultipleTasks(List<Text> listOfTaskForFinish, Controller controller) {
-        try {
-            new Thread(() -> {
-                for (Text text : listOfTaskForFinish) {
-                    try {
-                        long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(2000, 2500);
-                        System.out.println(this.getClass().getSimpleName() + " Production time of " + text.getText()
-                                + " is " + productionTime);
-                        Thread.sleep(productionTime);
-                        Platform.runLater(() -> controller.vBox3.getChildren().add(text));// Update on JavaFX Application Thread
-                        System.out.println("Finished");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public long finishMultipleTasks(GeneralTask taskToFinish) {
+        long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(2000, 2500);
+        System.out.println("******** " + this.getClass().getSimpleName() + " Production time of " + taskToFinish.getName()
+                + " is " + productionTime + "**********");
+        return productionTime;
     }
 }
 
