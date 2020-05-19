@@ -3,7 +3,7 @@ package sample.task;
 public enum TaskNames {
     TASK1("Make Bread"),
     TASK2("Make Omelette"),
-    TASK3("Task3"),
+    TASK3("Make Chicken Soup"),
     TASK4("Task4"),
     TASK5("Task5"),
     ;

@@ -10,15 +10,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import sample.production_line.ProductionLine;
-import sample.production_line.ProductionLineA;
-import sample.production_line.ProductionLineB;
-import sample.production_line.TaskPlanner;
-import sample.task.GeneralTask;
-import sample.task.MakeBread;
-import sample.task.MakeOmellete;
-import sample.task.TaskNames;
+import sample.production_line.*;
+import sample.task.*;
 import sample.task.task_product.Bread;
+import sample.task.task_product.ChickenSoup;
 import sample.task.task_product.Omelette;
 import sample.task.task_product.TaskProduct;
 import sample.warehouse.DistantWarehouse;
@@ -72,6 +67,7 @@ public class Controller {
 
     List<GeneralTask> makeBreadToDoList = new ArrayList<>();
     List<GeneralTask> makeOmeletteToDoList = new ArrayList<>();
+    List<GeneralTask> makeChickenSoupToDoList = new ArrayList<>();
     int n = 10;
     ExecutorService pool = Executors.newWorkStealingPool();
 
@@ -97,8 +93,11 @@ public class Controller {
                 Thread.sleep(1000);
                 turnTextStackIntoQueOfTasks(task1Display, new Bread());
                 turnTextStackIntoQueOfTasks(task2Display, new Omelette());
+                turnTextStackIntoQueOfTasks(task3Display, new ChickenSoup());
                 beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
                 beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
+                beginWorkingOnGeneralTask(makeChickenSoupToDoList, new ProductionLineC());
+                pool.shutdown();
             } catch (InterruptedException f) {
                 f.printStackTrace();
             }
@@ -131,6 +130,15 @@ public class Controller {
                 Platform.runLater(() -> {
                     vBox2.getChildren().removeAll(currentTexts);
                 });
+            } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("chickensoup")) {
+                for (int i = 0; i < currentTexts.size(); i++) {
+                    makeChickenSoupToDoList.add(new MakeChickenSoup(currentTexts.get(i).getText(),
+                            taskProduct, 1));
+                    System.out.println(makeChickenSoupToDoList.get(i));
+                }
+                Platform.runLater(() -> {
+                    vBox2.getChildren().removeAll(currentTexts);
+                });
             }
         }
     }
@@ -142,38 +150,10 @@ public class Controller {
         }
     }
 
-    Thread taskThread = new Thread(() -> {
-        try {
-            Thread.sleep(1000);
-            beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
-            beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Platform.runLater(() -> {
-            turnTextStackIntoQueOfTasks(task1Display, new Bread());
-            turnTextStackIntoQueOfTasks(task2Display, new Omelette());
-            beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
-            beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
-        });
-
-    });
-
     @FXML
     public void initialize() {
 //        button1.setDisable(true);
-
     }
-
-//    private void configureCheckBox(CheckBox checkBox) {
-//
-//        if (checkBox.isSelected()) {
-//            selectedCheckBoxes.add(checkBox);
-//        } else {
-//            unselectedCheckBoxes.add(checkBox);
-//        }
-//
-//    }
 
     public void buttonClickedRemove1(ActionEvent actionEvent) {
         if (!task1Display.isEmpty()) {

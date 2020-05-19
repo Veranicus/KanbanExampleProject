@@ -23,9 +23,11 @@ public class LocalWarehouse implements Warehouse {
         this.localIngredients = new HashMap<>();
         localIngredients.put(new Flour(), 3);
         localIngredients.put(new Salt(), 1);
-        localIngredients.put(new Water(), 3);
+        localIngredients.put(new Water(), 5);
         localIngredients.put(new Egg(), 3);
         localIngredients.put(new Onion(), 1);
+        localIngredients.put(new ChickenWing(), 3);
+        localIngredients.put(new Carrot(), 3);
     }
 
     @Override

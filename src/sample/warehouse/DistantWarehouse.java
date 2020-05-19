@@ -1,11 +1,8 @@
 package sample.warehouse;
 
-import sample.delay.DelayUtil;
 import sample.material.AbsMaterial;
 
 public class DistantWarehouse implements Warehouse {
-
-    DelayUtil delayUtil;
 
     private AbsMaterial absMaterial;
 
@@ -35,7 +32,6 @@ public class DistantWarehouse implements Warehouse {
 
     @Override
     public synchronized Integer provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems) {
-        double waitingTime = DelayUtil.getRandomDoubleBetweenRange(1000, 3000);
         System.out.println(this.getClass().getSimpleName() + " Giving " + generalMaterial.getName() + " of quantity "
                 + numberOfItems);
         return numberOfItems;
