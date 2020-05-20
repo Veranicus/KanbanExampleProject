@@ -55,6 +55,7 @@ public class Controller {
     public ScrollPane scrollPane3;
     @FXML
     public Text textShow1;
+    public VBox vBox4;
 
     Stack<Text> task1Display = new Stack<>();
     Stack<Text> task2Display = new Stack<>();
@@ -66,6 +67,7 @@ public class Controller {
     List<GeneralTask> makeOmeletteToDoList = new ArrayList<>();
     List<GeneralTask> makeChickenSoupToDoList = new ArrayList<>();
     List<GeneralTask> makePizzaToDoList = new ArrayList<>();
+    List<GeneralTask> makeHamburgerToDoList = new ArrayList<>();
     int n = 10;
     ExecutorService pool = Executors.newWorkStealingPool();
 
@@ -93,10 +95,12 @@ public class Controller {
                 turnTextStackIntoQueOfTasks(task2Display, new Omelette());
                 turnTextStackIntoQueOfTasks(task3Display, new ChickenSoup());
                 turnTextStackIntoQueOfTasks(task4Display, new Pizza());
+                turnTextStackIntoQueOfTasks(task5Display, new Hamburger());
                 beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
                 beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
                 beginWorkingOnGeneralTask(makeChickenSoupToDoList, new ProductionLineC());
                 beginWorkingOnGeneralTask(makePizzaToDoList, new ProductionLineA());
+                beginWorkingOnGeneralTask(makeHamburgerToDoList, new ProductionLineB());
                 pool.shutdown();
             } catch (InterruptedException f) {
                 f.printStackTrace();
@@ -147,6 +151,15 @@ public class Controller {
                 Platform.runLater(() -> {
                     vBox2.getChildren().removeAll(currentTexts);
                 });
+            } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("hamburger")) {
+                for (int i = 0; i < currentTexts.size(); i++) {
+                    makeHamburgerToDoList.add(new MakeHamburger(currentTexts.get(i).getText(),
+                            taskProduct, 1));
+                    System.out.println(makeHamburgerToDoList.get(i));
+                }
+                Platform.runLater(() -> {
+                    vBox2.getChildren().removeAll(currentTexts);
+                });
             }
         }
     }
@@ -154,7 +167,6 @@ public class Controller {
     public void beginWorkingOnGeneralTask(List<GeneralTask> tasks, ProductionLine productionLine) {
         if (!tasks.isEmpty()) {
             productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, pool);
-
         }
     }
 

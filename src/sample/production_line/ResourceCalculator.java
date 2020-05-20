@@ -1,5 +1,7 @@
 package sample.production_line;
 
+import javafx.application.Platform;
+import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
 import sample.material.AbsMaterial;
@@ -38,7 +40,8 @@ public class ResourceCalculator implements Callable<GeneralTask> {
         readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse);
         Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
         System.out.println("********* All Materials Are Ready*********");
-
+        System.out.println("********* Moving task to In Progress*********");
+        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName())));
         return onetaskToStart;
     }
 

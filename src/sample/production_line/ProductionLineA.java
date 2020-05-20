@@ -38,7 +38,7 @@ public class ProductionLineA implements ProductionLine {
                 pool.submit(new TaskDisplay(generalTaskToShow, controller));
             }
             Instant end = Instant.now();
-            System.out.println("***** Total Time to proces" + tasksWithMaterialsToFinish.get(1).getName() + " Group of tasks is " +
+            System.out.println("***** Total Time to proces" + tasksWithMaterialsToFinish.get(0).getName() + " Group of tasks is " +
                     Duration.between(start, end).toMillis() + "********");
         } catch (Exception E) {
             E.printStackTrace();

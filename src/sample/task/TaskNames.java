@@ -5,7 +5,7 @@ public enum TaskNames {
     TASK2("Make Omelette"),
     TASK3("Make Chicken Soup"),
     TASK4("Make Pizza"),
-    TASK5("Task5"),
+    TASK5("Make Hamburger"),
     ;
 
     public final String label;

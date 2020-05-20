@@ -20,7 +20,8 @@ public class TaskDisplay implements Callable {
     @Override
     public Object call() throws Exception {
         System.out.println("************** Displaying " + taskToShow.getName() + " *****************");
-        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(taskToShow.getName())));
+        Platform.runLater(() -> controller.vBox3.getChildren().remove(0));
+        Platform.runLater(() -> controller.vBox4.getChildren().add(new Text(taskToShow.getName())));
         return null;
     }
 }

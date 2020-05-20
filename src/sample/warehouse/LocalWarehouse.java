@@ -31,6 +31,9 @@ public class LocalWarehouse implements Warehouse {
         localIngredients.put(new Cheese(), 3);
         localIngredients.put(new Ham(), 2);
         localIngredients.put(new Tomato(), 4);
+        localIngredients.put(new Bun(), 2);
+        localIngredients.put(new Beef(), 1);
+        localIngredients.put(new Cheese(), 3);
     }
 
     @Override
@@ -60,12 +63,12 @@ public class LocalWarehouse implements Warehouse {
         if ((localIngredients.get(generalMaterial) - numberOfItems) >= 0) {
             returnQuantity = numberOfItems;
             localIngredients.replace(generalMaterial, (localIngredients.get(generalMaterial) - returnQuantity));
-        }else{
-            returnQuantity  = localIngredients.get(generalMaterial);
+        } else {
+            returnQuantity = localIngredients.get(generalMaterial);
             localIngredients.replace(generalMaterial, 0);
         }
         System.out.println(this.getClass().getSimpleName() + " is providing " + generalMaterial.getName() + " in" +
                 " quantity " + returnQuantity);
         return returnQuantity;
-        }
     }
+}
