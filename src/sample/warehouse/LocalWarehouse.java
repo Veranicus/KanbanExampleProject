@@ -28,6 +28,9 @@ public class LocalWarehouse implements Warehouse {
         localIngredients.put(new Onion(), 1);
         localIngredients.put(new ChickenWing(), 3);
         localIngredients.put(new Carrot(), 3);
+        localIngredients.put(new Cheese(), 3);
+        localIngredients.put(new Ham(), 2);
+        localIngredients.put(new Tomato(), 4);
     }
 
     @Override

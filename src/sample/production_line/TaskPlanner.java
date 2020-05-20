@@ -27,9 +27,10 @@ public class TaskPlanner implements Callable<GeneralTask> {
     }
 
     public long finishMultipleTasks(GeneralTask taskToFinish) {
-        long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(2000, 2500);
+        long productionTime = (long) DelayUtil.getRandomDoubleBetweenRange(taskToFinish.getMinProductionInterval(),
+                taskToFinish.getMaxProducitonInterval());
         System.out.println("******** " + this.getClass().getSimpleName() + " Production time of " + taskToFinish.getName()
-                + " is " + productionTime + "**********");
+                + " is " + productionTime + "ms **********");
         return productionTime;
     }
 }

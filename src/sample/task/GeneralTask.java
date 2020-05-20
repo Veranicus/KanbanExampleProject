@@ -10,6 +10,8 @@ public class GeneralTask implements Task {
     private TaskProduct typeOfTasksProduct;
     private Map<AbsMaterial, Integer> materialsRequired;
     private int quantityToProduce;
+    private double minProductionInterval;
+    private double maxProducitonInterval;
 
     public GeneralTask(String name, TaskProduct typeOfTasksProduct, int quantityToProduce) {
         this.name = name;
@@ -17,6 +19,21 @@ public class GeneralTask implements Task {
         this.quantityToProduce = quantityToProduce;
     }
 
+    public double getMinProductionInterval() {
+        return minProductionInterval;
+    }
+
+    public void setMinProductionInterval(double minProductionInterval) {
+        this.minProductionInterval = minProductionInterval;
+    }
+
+    public double getMaxProducitonInterval() {
+        return maxProducitonInterval;
+    }
+
+    public void setMaxProducitonInterval(double maxProducitonInterval) {
+        this.maxProducitonInterval = maxProducitonInterval;
+    }
 
     public String getName() {
         return name;

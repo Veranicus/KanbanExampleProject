@@ -4,7 +4,7 @@ public enum TaskNames {
     TASK1("Make Bread"),
     TASK2("Make Omelette"),
     TASK3("Make Chicken Soup"),
-    TASK4("Task4"),
+    TASK4("Make Pizza"),
     TASK5("Task5"),
     ;
 

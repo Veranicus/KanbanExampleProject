@@ -1,6 +1,6 @@
 package sample.task.task_product;
 
-public class Omelette implements TaskProduct {
+public class Pizza implements TaskProduct {
 
     private final static String name = "Omelette";
 

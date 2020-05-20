@@ -18,7 +18,10 @@ public class MakeBread extends GeneralTask implements Task {
         ingredients.put(new Flour(), 3 * quantityToProduce);
         ingredients.put(new Water(), 2 * quantityToProduce);
         this.setMaterialsRequired(ingredients);
+        this.setMinProductionInterval(200);
+        this.setMaxProducitonInterval(400);
     }
+
 
     @Override
     public boolean equals(Object o) {

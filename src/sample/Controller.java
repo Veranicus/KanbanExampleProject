@@ -12,10 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import sample.production_line.*;
 import sample.task.*;
-import sample.task.task_product.Bread;
-import sample.task.task_product.ChickenSoup;
-import sample.task.task_product.Omelette;
-import sample.task.task_product.TaskProduct;
+import sample.task.task_product.*;
 import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
@@ -68,6 +65,7 @@ public class Controller {
     List<GeneralTask> makeBreadToDoList = new ArrayList<>();
     List<GeneralTask> makeOmeletteToDoList = new ArrayList<>();
     List<GeneralTask> makeChickenSoupToDoList = new ArrayList<>();
+    List<GeneralTask> makePizzaToDoList = new ArrayList<>();
     int n = 10;
     ExecutorService pool = Executors.newWorkStealingPool();
 
@@ -94,9 +92,11 @@ public class Controller {
                 turnTextStackIntoQueOfTasks(task1Display, new Bread());
                 turnTextStackIntoQueOfTasks(task2Display, new Omelette());
                 turnTextStackIntoQueOfTasks(task3Display, new ChickenSoup());
+                turnTextStackIntoQueOfTasks(task4Display, new Pizza());
                 beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
                 beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
                 beginWorkingOnGeneralTask(makeChickenSoupToDoList, new ProductionLineC());
+                beginWorkingOnGeneralTask(makePizzaToDoList, new ProductionLineA());
                 pool.shutdown();
             } catch (InterruptedException f) {
                 f.printStackTrace();
@@ -104,7 +104,6 @@ public class Controller {
         });
         taskThread.start();
 
-//        taskThread.start();
     }
 
     public synchronized void turnTextStackIntoQueOfTasks(Stack<Text> currentTexts,
@@ -135,6 +134,15 @@ public class Controller {
                     makeChickenSoupToDoList.add(new MakeChickenSoup(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeChickenSoupToDoList.get(i));
+                }
+                Platform.runLater(() -> {
+                    vBox2.getChildren().removeAll(currentTexts);
+                });
+            } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("pizza")) {
+                for (int i = 0; i < currentTexts.size(); i++) {
+                    makeChickenSoupToDoList.add(new MakePizza(currentTexts.get(i).getText(),
+                            taskProduct, 1));
+                    System.out.println(makePizzaToDoList.get(i));
                 }
                 Platform.runLater(() -> {
                     vBox2.getChildren().removeAll(currentTexts);
