@@ -37,11 +37,14 @@ public class ResourceCalculator implements Callable<GeneralTask> {
 
     @Override
     public GeneralTask call() throws Exception {
+        if (!controller.vBox2.getChildren().isEmpty()) {
+            Platform.runLater(() -> controller.vBox2.getChildren().remove(0));
+        }
+        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName())));
         readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse);
         Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
         System.out.println("********* All Materials Are Ready*********");
         System.out.println("********* Moving task to In Progress*********");
-        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName())));
         return onetaskToStart;
     }
 

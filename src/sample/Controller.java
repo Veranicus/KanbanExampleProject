@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -119,50 +118,50 @@ public class Controller {
                             taskProduct, 1));
                     System.out.println(makeBreadToDoList.get(i));
                 }
-                if (!vBox2.getChildren().isEmpty()) {
-                    Platform.runLater(() -> {
-                        vBox2.getChildren().removeAll(currentTexts);
-                    });
-                }
+//                if (!vBox2.getChildren().isEmpty()) {
+//                    Platform.runLater(() -> {
+//                        vBox2.getChildren().removeAll(currentTexts);
+//                    });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("omelette")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
                     makeOmeletteToDoList.add(new MakeOmellete(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeOmeletteToDoList.get(i));
                 }
-                Platform.runLater(() -> {
-                    vBox2.getChildren().removeAll(currentTexts);
-                });
+//                Platform.runLater(() -> {
+//                    vBox2.getChildren().removeAll(currentTexts);
+//                });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("chickensoup")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
                     makeChickenSoupToDoList.add(new MakeChickenSoup(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeChickenSoupToDoList.get(i));
                 }
-                Platform.runLater(() -> {
-                    vBox2.getChildren().removeAll(currentTexts);
-                });
+//                Platform.runLater(() -> {
+//                    vBox2.getChildren().removeAll(currentTexts);
+//                });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("pizza")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
-                    makeChickenSoupToDoList.add(new MakePizza(currentTexts.get(i).getText(),
+                    makePizzaToDoList.add(new MakePizza(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makePizzaToDoList.get(i));
                 }
-                Platform.runLater(() -> {
-                    vBox2.getChildren().removeAll(currentTexts);
-                });
+//                Platform.runLater(() -> {
+//                    vBox2.getChildren().removeAll(currentTexts);
+//                });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("hamburger")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
                     makeHamburgerToDoList.add(new MakeHamburger(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeHamburgerToDoList.get(i));
                 }
-                Platform.runLater(() -> {
-                    vBox2.getChildren().removeAll(currentTexts);
-                });
+//                Platform.runLater(() -> {
+//                    vBox2.getChildren().removeAll(currentTexts);
+//                });
             }
         }
     }
+
 
     public void beginWorkingOnGeneralTask(List<GeneralTask> tasks, ProductionLine productionLine) {
         if (!tasks.isEmpty()) {
