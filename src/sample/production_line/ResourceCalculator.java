@@ -38,6 +38,7 @@ public class ResourceCalculator implements Callable<GeneralTask> {
         readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse);
         Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
         System.out.println("********* All Materials Are Ready*********");
+
         return onetaskToStart;
     }
 

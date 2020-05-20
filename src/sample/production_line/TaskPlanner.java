@@ -1,5 +1,7 @@
 package sample.production_line;
 
+import javafx.application.Platform;
+import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
 import sample.task.GeneralTask;
@@ -23,6 +25,7 @@ public class TaskPlanner implements Callable<GeneralTask> {
     @Override
     public GeneralTask call() throws Exception {
         Thread.sleep(finishMultipleTasks(oneTaskToFinish));
+        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(oneTaskToFinish.getName())));
         return oneTaskToFinish;
     }
 
