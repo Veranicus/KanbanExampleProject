@@ -70,10 +70,13 @@
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="4.0">
-               <children>
-                  <Button fx:id="startButton" mnemonicParsing="false" onAction="#buttonStartClicked" text="Start" />
-                  <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetApplication" text="Reset" />
-               </children>
+                <children>
+                    <Button fx:id="startButton" mnemonicParsing="false" onAction="#buttonStartClicked" text="Start">
+                        <HBox.margin>
+                            <Insets left="22.0"/>
+                        </HBox.margin>
+                    </Button>
+                </children>
                <VBox.margin>
                   <Insets left="7.0" top="5.0" />
                </VBox.margin>
@@ -116,6 +119,11 @@
        <Text layoutX="754.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Done">
            <font>
                <Font size="17.0"/>
+           </font>
+       </Text>
+       <Text layoutX="940.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="KANBAN BOARD">
+           <font>
+               <Font name="Arial" size="21.0"/>
            </font>
        </Text>
    </children>

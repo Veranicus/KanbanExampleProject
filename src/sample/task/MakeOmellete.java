@@ -18,8 +18,8 @@ public class MakeOmellete extends GeneralTask {
         ingredients.put(new Egg(), 3 * quantityToProduce);
         ingredients.put(new Onion(), 1 * quantityToProduce);
         this.setMaterialsRequired(ingredients);
-        this.setMinProductionInterval(120);
-        this.setMaxProducitonInterval(715);
+        this.setMinProductionInterval(100);
+        this.setMaxProducitonInterval(150);
     }
 
 }

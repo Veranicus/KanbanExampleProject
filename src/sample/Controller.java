@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -62,17 +63,39 @@ public class Controller {
     Stack<Text> task4Display = new Stack<>();
     Stack<Text> task5Display = new Stack<>();
 
+
     List<GeneralTask> makeBreadToDoList = new ArrayList<>();
     List<GeneralTask> makeOmeletteToDoList = new ArrayList<>();
     List<GeneralTask> makeChickenSoupToDoList = new ArrayList<>();
     List<GeneralTask> makePizzaToDoList = new ArrayList<>();
     List<GeneralTask> makeHamburgerToDoList = new ArrayList<>();
+    List<GeneralTask> faultyTasks = new ArrayList<>();
+    List<GeneralTask> faultyTasks2 = new ArrayList<>();
+
+    public void addFaultyTask(GeneralTask generalTask) {
+        controllor.addFaultyTaskCount();
+        generalTask.setName(generalTask.getName() + "Fix");
+        this.faultyTasks.add(generalTask);
+        System.out.println("FAULTY TASK COUNT " + controllor.getNumberOFTasksToFix());
+    }
+
+    public void clearFaultyTask() {
+        this.faultyTasks = new ArrayList<>();
+    }
+
     int n = 10;
-    ExecutorService pool = Executors.newWorkStealingPool();
+    ExecutorService pool = Executors.newFixedThreadPool(20);
+//    ExecutorService pool2 = Executors.newFixedThreadPool(20);
+//    ExecutorService poolFix = Executors.newWorkStealingPool();
 
     LocalWarehouse localWarehouse = new LocalWarehouse();
     DistantWarehouse distantWarehouse = new DistantWarehouse();
     TaskPlanner taskPlanner = new TaskPlanner();
+
+    ProductionLineB productionLineB = new ProductionLineB();
+
+    Controllor controllor = new Controllor(productionLineB, this,
+            localWarehouse, distantWarehouse, pool);
 
     @FXML
     Button button1 = new Button();
@@ -87,6 +110,7 @@ public class Controller {
         vBox2.getChildren().addAll(task4Display);
         vBox2.getChildren().addAll(task5Display);
         System.out.println(task2Display);
+
         Thread taskThread = new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -96,21 +120,33 @@ public class Controller {
                 turnTextStackIntoQueOfTasks(task4Display, new Pizza());
                 turnTextStackIntoQueOfTasks(task5Display, new Hamburger());
                 beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
-                beginWorkingOnGeneralTask(makeOmeletteToDoList, new ProductionLineB());
+                beginWorkingOnGeneralTask(makeOmeletteToDoList, productionLineB);
                 beginWorkingOnGeneralTask(makeChickenSoupToDoList, new ProductionLineC());
                 beginWorkingOnGeneralTask(makePizzaToDoList, new ProductionLineA());
                 beginWorkingOnGeneralTask(makeHamburgerToDoList, new ProductionLineB());
+                Thread.sleep(500);
+
+                while (controllor.getNumberOFTasksToFix() != 0) {
+                    System.out.println(controllor.getNumberOFTasksToFix());
+                    addAllTasksToVbox2(faultyTasks);
+//                     controllor.setNumberOFTasksToFix(faultyTasks.size());
+                    faultyTasks2.addAll(faultyTasks);
+                    beginWorkingOnGeneralTask(faultyTasks2, new ProductionLineC());
+                    faultyTasks2.clear();
+                    Platform.runLater(() -> vBox2.getChildren().clear());
+                }
                 pool.shutdown();
             } catch (InterruptedException f) {
                 f.printStackTrace();
+            } finally {
             }
         });
         taskThread.start();
 
     }
 
-    public synchronized void turnTextStackIntoQueOfTasks(Stack<Text> currentTexts,
-                                                         TaskProduct taskProduct) {
+    public void turnTextStackIntoQueOfTasks(Stack<Text> currentTexts,
+                                            TaskProduct taskProduct) {
         if (!currentTexts.isEmpty()) {
             if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("bread")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
@@ -118,46 +154,30 @@ public class Controller {
                             taskProduct, 1));
                     System.out.println(makeBreadToDoList.get(i));
                 }
-//                if (!vBox2.getChildren().isEmpty()) {
-//                    Platform.runLater(() -> {
-//                        vBox2.getChildren().removeAll(currentTexts);
-//                    });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("omelette")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
                     makeOmeletteToDoList.add(new MakeOmellete(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeOmeletteToDoList.get(i));
                 }
-//                Platform.runLater(() -> {
-//                    vBox2.getChildren().removeAll(currentTexts);
-//                });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("chickensoup")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
                     makeChickenSoupToDoList.add(new MakeChickenSoup(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeChickenSoupToDoList.get(i));
                 }
-//                Platform.runLater(() -> {
-//                    vBox2.getChildren().removeAll(currentTexts);
-//                });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("pizza")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
                     makePizzaToDoList.add(new MakePizza(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makePizzaToDoList.get(i));
                 }
-//                Platform.runLater(() -> {
-//                    vBox2.getChildren().removeAll(currentTexts);
-//                });
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("hamburger")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
                     makeHamburgerToDoList.add(new MakeHamburger(currentTexts.get(i).getText(),
                             taskProduct, 1));
                     System.out.println(makeHamburgerToDoList.get(i));
                 }
-//                Platform.runLater(() -> {
-//                    vBox2.getChildren().removeAll(currentTexts);
-//                });
             }
         }
     }
@@ -165,13 +185,28 @@ public class Controller {
 
     public void beginWorkingOnGeneralTask(List<GeneralTask> tasks, ProductionLine productionLine) {
         if (!tasks.isEmpty()) {
+            System.out.println("TOTAL FAULT TO REPAIR" + controllor.getNumberOFTasksToFix());
+            controllor.nullFaultyTaskCount();
+            faultyTasks.clear();
             productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, pool);
+        }
+    }
+
+    public synchronized void addAllTasksToVbox2(List<GeneralTask> tasks) {
+        if (!tasks.isEmpty()) {
+            for (GeneralTask g : tasks)
+                Platform.runLater((() -> vBox2.getChildren().add(new Text(g.getName()))));
         }
     }
 
     @FXML
     public void initialize() {
 //        button1.setDisable(true);
+    }
+
+
+    public Controllor getControllor() {
+        return controllor;
     }
 
     public void buttonClickedRemove1(ActionEvent actionEvent) {
@@ -241,5 +276,25 @@ public class Controller {
 
     public void resetApplication(ActionEvent actionEvent) {
         resetApplication(actionEvent);
+    }
+
+    public Stack<Text> getTask1Display() {
+        return task1Display;
+    }
+
+    public Stack<Text> getTask2Display() {
+        return task2Display;
+    }
+
+    public Stack<Text> getTask3Display() {
+        return task3Display;
+    }
+
+    public Stack<Text> getTask4Display() {
+        return task4Display;
+    }
+
+    public Stack<Text> getTask5Display() {
+        return task5Display;
     }
 }

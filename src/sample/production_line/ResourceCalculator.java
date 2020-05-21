@@ -65,7 +65,7 @@ public class ResourceCalculator implements Callable<GeneralTask> {
                 distantWarehouse.setNumberOfItems(mapElement.getValue() - providedQuantity);
                 distantWarehouse.provideMultipleMaterials(mapElement.getKey(),
                         mapElement.getValue() - providedQuantity);
-                waitingTime += (long) DelayUtil.getRandomDoubleBetweenRange(500, 520);
+                waitingTime += (long) DelayUtil.getRandomDoubleBetweenRange(100, 120);
                 System.out.println("*******Total Waiting time: " + waitingTime + " miliseconds.********");
             }
         }

@@ -12,6 +12,7 @@ public class TaskDisplay implements Callable {
     GeneralTask taskToShow;
     Controller controller;
 
+
     public TaskDisplay(GeneralTask taskToShow, Controller controller) {
         this.taskToShow = taskToShow;
         this.controller = controller;
@@ -21,7 +22,16 @@ public class TaskDisplay implements Callable {
     public Object call() throws Exception {
         System.out.println("************** Displaying " + taskToShow.getName() + " *****************");
         Platform.runLater(() -> controller.vBox3.getChildren().remove(0));
-        Platform.runLater(() -> controller.vBox4.getChildren().add(new Text(taskToShow.getName())));
-        return null;
+        if (!Controllor.controlTask(taskToShow)) {
+            System.out.println("CONTROLLER FOUND AN ERROR, PUTTING THIS TASK BACK TO PRODUCTION");
+            controller.addFaultyTask(taskToShow);
+//            controller.getControllor().addFaultyTaskCount();
+//            controller.getControllor().addFaultyTask(taskToShow);
+//            controller.getControllor().turnGeneralTaskToRespectiveTextStack(taskToShow.getTypeOfTasksProduct());
+            return taskToShow;
+        } else {
+            Platform.runLater(() -> controller.vBox4.getChildren().add(new Text(taskToShow.getName())));
+            return null;
+        }
     }
 }
