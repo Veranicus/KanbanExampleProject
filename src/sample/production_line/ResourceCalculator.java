@@ -10,24 +10,20 @@ import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class ResourceCalculator implements Callable<GeneralTask> {
 
 
-    private List<GeneralTask> TasksToStart;
     private Controller controller;
     private LocalWarehouse localWarehouse;
     private DistantWarehouse distantWarehouse;
     private GeneralTask onetaskToStart;
     private long waitingTime = 0;
 
-    public ResourceCalculator(List<GeneralTask> tasksToStart, Controller controller,
-                              LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse,
+    public ResourceCalculator(Controller controller, LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse,
                               GeneralTask onetaskToStart) {
-        TasksToStart = tasksToStart;
         this.controller = controller;
         this.localWarehouse = localWarehouse;
         this.distantWarehouse = distantWarehouse;
@@ -38,9 +34,10 @@ public class ResourceCalculator implements Callable<GeneralTask> {
     @Override
     public GeneralTask call() throws Exception {
         if (!controller.vBox2.getChildren().isEmpty()) {
-            Platform.runLater(() -> controller.vBox2.getChildren().remove(0));
+            Platform.runLater(() -> controller.vBox2.getChildren().remove(onetaskToStart));
         }
-        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName())));
+        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName() + " " +
+                onetaskToStart.getIndex())));
         readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse);
         Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
         System.out.println("********* All Materials Are Ready*********");
@@ -48,8 +45,8 @@ public class ResourceCalculator implements Callable<GeneralTask> {
         return onetaskToStart;
     }
 
-    private long readyMaterialsForOneTask(GeneralTask oneGeneralTask, LocalWarehouse localWarehouse,
-                                          DistantWarehouse distantWarehouse) {
+    private synchronized long readyMaterialsForOneTask(GeneralTask oneGeneralTask, LocalWarehouse localWarehouse,
+                                                       DistantWarehouse distantWarehouse) {
 
         Iterator hmIterator = oneGeneralTask.getMaterialsRequired().entrySet().iterator();
         while (hmIterator.hasNext()) {
@@ -65,7 +62,7 @@ public class ResourceCalculator implements Callable<GeneralTask> {
                 distantWarehouse.setNumberOfItems(mapElement.getValue() - providedQuantity);
                 distantWarehouse.provideMultipleMaterials(mapElement.getKey(),
                         mapElement.getValue() - providedQuantity);
-                waitingTime += (long) DelayUtil.getRandomDoubleBetweenRange(100, 120);
+                waitingTime += (long) DelayUtil.getRandomDoubleBetweenRange(50, 100);
                 System.out.println("*******Total Waiting time: " + waitingTime + " miliseconds.********");
             }
         }

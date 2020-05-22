@@ -1,23 +1,46 @@
 package sample.production_line;
 
 import sample.Controller;
-import sample.delay.DelayUtil;
 import sample.task.GeneralTask;
 import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-public class ProductionLineA implements ProductionLine {
+public class ProductionLineA implements ProductionLine, Callable<Object> {
+
+
+    private Queue<GeneralTask> oneTaskQueue;
+    private Controller controller;
+    private LocalWarehouse localWarehouse;
+    private DistantWarehouse distantWarehouse;
+    private ExecutorService pool;
 
 
     private static final String productionLineName = "Production Line A";
-    DelayUtil d = new DelayUtil();
 
     public ProductionLineA() {
+    }
+
+
+    public void setOneTaskQueue(Queue<GeneralTask> oneTaskQueue) {
+        this.oneTaskQueue = oneTaskQueue;
+    }
+
+    public void addOneTask(GeneralTask oneTask) {
+        this.oneTaskQueue.add(oneTask);
+    }
+
+    public ProductionLineA(Queue<GeneralTask> oneTaskQueue, Controller controller,
+                           LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse) {
+        this.oneTaskQueue = oneTaskQueue;
+        this.controller = controller;
+        this.localWarehouse = localWarehouse;
+        this.distantWarehouse = distantWarehouse;
     }
 
     public static String getProductionLineName() {
@@ -25,23 +48,28 @@ public class ProductionLineA implements ProductionLine {
     }
 
     @Override
-    public void processMultipleTasks(List<GeneralTask> tasksWithMaterialsToFinish, Controller controller,
-                                     LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse, ExecutorService pool) {
+    public Object call() throws Exception {
+        processOneTask(oneTaskQueue, controller, localWarehouse, distantWarehouse);
+        return null;
+    }
+
+    @Override
+    public void processOneTask(Queue<GeneralTask> tasksWithMaterialsToFinish, Controller controller,
+                               LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse) {
         Instant start = Instant.now();
         // Build a fixed number of thread pool
         try {
-
-            for (GeneralTask g : tasksWithMaterialsToFinish) {
-                GeneralTask generalTaskToCalculate = pool.submit(new ResourceCalculator(tasksWithMaterialsToFinish, controller,
-                        localWarehouse, distantWarehouse, g)).get();
-                GeneralTask generalTaskToShow = pool.submit(new TaskPlanner(generalTaskToCalculate, controller)).get();
-                pool.submit(new TaskDisplay(generalTaskToShow, controller));
+            while (tasksWithMaterialsToFinish.iterator().hasNext()) {
+                GeneralTask generalTaskToCalculate = new ResourceCalculator(
+                        this.controller, this.localWarehouse, this.distantWarehouse, tasksWithMaterialsToFinish.poll()).call();
+                GeneralTask generalTaskToShow = new TaskPlanner(generalTaskToCalculate, controller).call();
+                new TaskDisplay(generalTaskToShow, controller).call();
             }
+        } catch (Exception F) {
+            F.printStackTrace();
             Instant end = Instant.now();
-            System.out.println("***** Total Time to proces" + tasksWithMaterialsToFinish.get(0).getName() + " Group of tasks is " +
+            System.out.println("***** Total Time to proces" + tasksWithMaterialsToFinish + " Group of tasks is " +
                     Duration.between(start, end).toMillis() + "********");
-        } catch (Exception E) {
-            E.printStackTrace();
         }
     }
 }

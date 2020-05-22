@@ -4,19 +4,26 @@ import sample.material.AbsMaterial;
 import sample.task.task_product.TaskProduct;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public class GeneralTask implements Task {
+public class GeneralTask implements Task, Callable<GeneralTask> {
     private String name;
     private TaskProduct typeOfTasksProduct;
     private Map<AbsMaterial, Integer> materialsRequired;
     private int quantityToProduce;
     private double minProductionInterval;
     private double maxProducitonInterval;
+    private int index;
 
-    public GeneralTask(String name, TaskProduct typeOfTasksProduct, int quantityToProduce) {
+    public GeneralTask(String name, TaskProduct typeOfTasksProduct, int quantityToProduce, int index) {
         this.name = name;
         this.typeOfTasksProduct = typeOfTasksProduct;
         this.quantityToProduce = quantityToProduce;
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public double getMinProductionInterval() {
@@ -74,19 +81,12 @@ public class GeneralTask implements Task {
 
         GeneralTask that = (GeneralTask) o;
 
-        if (quantityToProduce != that.quantityToProduce) return false;
-        if (!name.equals(that.name)) return false;
-        if (!typeOfTasksProduct.equals(that.typeOfTasksProduct)) return false;
-        return materialsRequired.equals(that.materialsRequired);
+        return index == that.index;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + typeOfTasksProduct.hashCode();
-        result = 31 * result + materialsRequired.hashCode();
-        result = 31 * result + quantityToProduce;
-        return result;
+        return index;
     }
 
     @Override
@@ -96,5 +96,10 @@ public class GeneralTask implements Task {
                 ", typeOfTasksProduct=" + typeOfTasksProduct +
                 ", quantityToProduce=" + quantityToProduce +
                 '}';
+    }
+
+    @Override
+    public GeneralTask call() throws Exception {
+        return this;
     }
 }

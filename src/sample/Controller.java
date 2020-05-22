@@ -16,9 +16,7 @@ import sample.task.task_product.*;
 import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,6 +61,8 @@ public class Controller {
     Stack<Text> task4Display = new Stack<>();
     Stack<Text> task5Display = new Stack<>();
 
+    Queue<GeneralTask> tasks = new LinkedList<>();
+
 
     List<GeneralTask> makeBreadToDoList = new ArrayList<>();
     List<GeneralTask> makeOmeletteToDoList = new ArrayList<>();
@@ -84,7 +84,7 @@ public class Controller {
     }
 
     int n = 10;
-    ExecutorService pool = Executors.newFixedThreadPool(20);
+    ExecutorService pool = Executors.newFixedThreadPool(3);
 //    ExecutorService pool2 = Executors.newFixedThreadPool(20);
 //    ExecutorService poolFix = Executors.newWorkStealingPool();
 
@@ -92,9 +92,10 @@ public class Controller {
     DistantWarehouse distantWarehouse = new DistantWarehouse();
     TaskPlanner taskPlanner = new TaskPlanner();
 
-    ProductionLineB productionLineB = new ProductionLineB();
-
-    Controllor controllor = new Controllor(productionLineB, this,
+    //    ProductionLineB productionLineB = new ProductionLineB();
+    ProductionLineB productionLine2 = new ProductionLineB(tasks, this,
+            localWarehouse, distantWarehouse);
+    Controllor controllor = new Controllor(productionLine2, this,
             localWarehouse, distantWarehouse, pool);
 
     @FXML
@@ -119,22 +120,65 @@ public class Controller {
                 turnTextStackIntoQueOfTasks(task3Display, new ChickenSoup());
                 turnTextStackIntoQueOfTasks(task4Display, new Pizza());
                 turnTextStackIntoQueOfTasks(task5Display, new Hamburger());
-                beginWorkingOnGeneralTask(makeBreadToDoList, new ProductionLineA());
-                beginWorkingOnGeneralTask(makeOmeletteToDoList, productionLineB);
-                beginWorkingOnGeneralTask(makeChickenSoupToDoList, new ProductionLineC());
-                beginWorkingOnGeneralTask(makePizzaToDoList, new ProductionLineA());
-                beginWorkingOnGeneralTask(makeHamburgerToDoList, new ProductionLineB());
+
+//                ProductionLineB productionLine2 = new ProductionLineB(this,
+//                        localWarehouse, distantWarehouse);
+
+//                tasks.add(new MakeHamburger("test", new Hamburger(), 1,0));
+//                tasks.add(new MakePizza("test", new Hamburger(), 1,1));
+//                tasks.add(new MakePizza("test", new Hamburger(), 1,2));
+                ProductionLineA productionLine1 = new ProductionLineA(tasks, this,
+                        localWarehouse, distantWarehouse);
+                ProductionLineB productionLine2 = new ProductionLineB(tasks, this,
+                        localWarehouse, distantWarehouse);
+                ProductionLineC productionLine3 = new ProductionLineC(tasks, this,
+                        localWarehouse, distantWarehouse);
+
+
+//                    GeneralTask result1 = pool.submit(tasks.poll()).get();
+//                    GeneralTask result2 = pool.submit(tasks.poll()).get();
+
+//                        productionLine2.setOneTask(pool.submit(tasks.poll()).get());
+                pool.submit(productionLine1);
+                pool.submit(productionLine2);
+                pool.submit(productionLine3);
+
+//                } catch (ExecutionException g) {
+//                ProductionLineB productionLine2 = new ProductionLineB(makeOmeletteToDoList, this,
+//                        localWarehouse, distantWarehouse);
+//                ProductionLineC productionLine3 = new ProductionLineC(makeHamburgerToDoList, this,
+//                        localWarehouse, distantWarehouse);
+
+//                pool.submit(productionLine1);
+//                pool.submit(productionLine2);
+//                pool.submit(productionLine2);
+//                pool.submit(productionLine3);
+//                ProductionLineC productionLineC4 = new ProductionLineC(makeChickenSoupToDoList, this,
+//                        localWarehouse, distantWarehouse);
+//                pool.submit(productionLineC4).wait();
+//                productionLine1.setTasksWithMaterialsToFinish(makeChickenSoupToDoList);
+//                productionLine2.setTasksWithMaterialsToFinish(makePizzaToDoList);
+//                pool.submit(productionLine1);
+//                pool.submit(productionLine2);
+//
+//                productionLine3.setTasksWithMaterialsToFinish(faultyTasks);
+
+//                while (controllor.getNumberOFTasksToFix() != 0){
+//                    pool.submit(productionLine3);
+//                }
+
                 Thread.sleep(500);
 
-                while (controllor.getNumberOFTasksToFix() != 0) {
-                    System.out.println(controllor.getNumberOFTasksToFix());
-                    addAllTasksToVbox2(faultyTasks);
-//                     controllor.setNumberOFTasksToFix(faultyTasks.size());
-                    faultyTasks2.addAll(faultyTasks);
-                    beginWorkingOnGeneralTask(faultyTasks2, new ProductionLineC());
-                    faultyTasks2.clear();
-                    Platform.runLater(() -> vBox2.getChildren().clear());
-                }
+
+//                while (controllor.getNumberOFTasksToFix() != 0) {
+//                    System.out.println(controllor.getNumberOFTasksToFix());
+//                    addAllTasksToVbox2(faultyTasks);
+////                     controllor.setNumberOFTasksToFix(faultyTasks.size());
+//                    faultyTasks2.addAll(faultyTasks);
+//                    beginWorkingOnGeneralTask(faultyTasks2, new ProductionLineC());
+//                    faultyTasks2.clear();
+//                    Platform.runLater(() -> vBox2.getChildren().clear());
+//                }
                 pool.shutdown();
             } catch (InterruptedException f) {
                 f.printStackTrace();
@@ -150,33 +194,33 @@ public class Controller {
         if (!currentTexts.isEmpty()) {
             if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("bread")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
-                    makeBreadToDoList.add(new MakeBread(currentTexts.get(i).getText(),
-                            taskProduct, 1));
-                    System.out.println(makeBreadToDoList.get(i));
+                    tasks.add(new MakeBread(currentTexts.get(i).getText(),
+                            taskProduct, 1, i));
+//                    System.out.println(tasks.get(i));
                 }
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("omelette")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
-                    makeOmeletteToDoList.add(new MakeOmellete(currentTexts.get(i).getText(),
-                            taskProduct, 1));
-                    System.out.println(makeOmeletteToDoList.get(i));
+                    tasks.add(new MakeOmellete(currentTexts.get(i).getText(),
+                            taskProduct, 1, i));
+//                    System.out.println(tas.get(i));
                 }
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("chickensoup")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
-                    makeChickenSoupToDoList.add(new MakeChickenSoup(currentTexts.get(i).getText(),
-                            taskProduct, 1));
-                    System.out.println(makeChickenSoupToDoList.get(i));
+                    tasks.add(new MakeChickenSoup(currentTexts.get(i).getText(),
+                            taskProduct, 1, i));
+//                    System.out.println(makeChickenSoupToDoList.get(i));
                 }
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("pizza")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
-                    makePizzaToDoList.add(new MakePizza(currentTexts.get(i).getText(),
-                            taskProduct, 1));
-                    System.out.println(makePizzaToDoList.get(i));
+                    tasks.add(new MakePizza(currentTexts.get(i).getText(),
+                            taskProduct, 1, i));
+//                    System.out.println(makePizzaToDoList.get(i));
                 }
             } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("hamburger")) {
                 for (int i = 0; i < currentTexts.size(); i++) {
-                    makeHamburgerToDoList.add(new MakeHamburger(currentTexts.get(i).getText(),
-                            taskProduct, 1));
-                    System.out.println(makeHamburgerToDoList.get(i));
+                    tasks.add(new MakeHamburger(currentTexts.get(i).getText(),
+                            taskProduct, 1, i));
+//                    System.out.println(makeHamburgerToDoList.get(i));
                 }
             }
         }
@@ -188,7 +232,7 @@ public class Controller {
             System.out.println("TOTAL FAULT TO REPAIR" + controllor.getNumberOFTasksToFix());
             controllor.nullFaultyTaskCount();
             faultyTasks.clear();
-            productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, pool);
+//            productionLine.processMultipleTasks(tasks, this, localWarehouse, distantWarehouse, pool);
         }
     }
 

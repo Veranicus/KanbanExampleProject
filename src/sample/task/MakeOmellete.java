@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class MakeOmellete extends GeneralTask {
 
-    public MakeOmellete(String name, TaskProduct typeOfTasksProduct, int quantityToProduce) {
-        super(name, typeOfTasksProduct, quantityToProduce);
+    public MakeOmellete(String name, TaskProduct typeOfTasksProduct, int quantityToProduce, int index) {
+        super(name, typeOfTasksProduct, quantityToProduce, index);
         Map<AbsMaterial, Integer> ingredients = new HashMap<>();
         ingredients.put(new Salt(), 1 * quantityToProduce);
         ingredients.put(new Egg(), 3 * quantityToProduce);

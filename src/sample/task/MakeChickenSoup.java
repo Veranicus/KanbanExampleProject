@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class MakeChickenSoup extends GeneralTask {
 
-    public MakeChickenSoup(String name, TaskProduct typeOfTasksProduct, int quantityToProduce) {
-        super(name, typeOfTasksProduct, quantityToProduce);
+    public MakeChickenSoup(String name, TaskProduct typeOfTasksProduct, int quantityToProduce, int index) {
+        super(name, typeOfTasksProduct, quantityToProduce, index);
         Map<AbsMaterial, Integer> ingredients = new HashMap<>();
         ingredients.put(new Carrot(), 1 * quantityToProduce);
         ingredients.put(new ChickenWing(), 3 * quantityToProduce);

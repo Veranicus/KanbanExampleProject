@@ -7,10 +7,11 @@ import sample.warehouse.LocalWarehouse;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-public class ProductionLineB implements ProductionLine {
+public class ProductionLineB implements ProductionLine, Callable<Object> {
 
     //https://stackoverflow.com/questions/289434/how-to-make-a-java-thread-wait-for-another-threads-output
     //https://stackoverflow.com/questions/289434/how-to-make-a-java-thread-wait-for-another-threads-output
@@ -18,9 +19,33 @@ public class ProductionLineB implements ProductionLine {
     //https://stackoverflow.com/questions/61854896/javafx-application-doesnt-add-elements-to-gui-after-finishing-tasks-from-differ
 
 
-    private static final String productionLineName = "Production Line B";
+    private Queue<GeneralTask> oneTaskQueue;
+    private Controller controller;
+    private LocalWarehouse localWarehouse;
+    private DistantWarehouse distantWarehouse;
+    private ExecutorService pool;
+
+
+    private static final String productionLineName = "Production Line A";
 
     public ProductionLineB() {
+    }
+
+
+    public void setOneTaskQueue(Queue<GeneralTask> oneTaskQueue) {
+        this.oneTaskQueue = oneTaskQueue;
+    }
+
+    public void addOneTask(GeneralTask oneTask) {
+        this.oneTaskQueue.add(oneTask);
+    }
+
+    public ProductionLineB(Queue<GeneralTask> oneTaskQueue, Controller controller,
+                           LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse) {
+        this.oneTaskQueue = oneTaskQueue;
+        this.controller = controller;
+        this.localWarehouse = localWarehouse;
+        this.distantWarehouse = distantWarehouse;
     }
 
     public static String getProductionLineName() {
@@ -28,25 +53,28 @@ public class ProductionLineB implements ProductionLine {
     }
 
     @Override
-    public void processMultipleTasks(List<GeneralTask> tasksWithMaterialsToFinish, Controller controller,
-                                     LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse, ExecutorService pool) {
+    public Object call() throws Exception {
+        processOneTask(oneTaskQueue, controller, localWarehouse, distantWarehouse);
+        return null;
+    }
+
+    @Override
+    public void processOneTask(Queue<GeneralTask> tasksWithMaterialsToFinish, Controller controller,
+                               LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse) {
         Instant start = Instant.now();
-        if (!tasksWithMaterialsToFinish.isEmpty()) {
-            try {
-                for (GeneralTask g : tasksWithMaterialsToFinish) {
-                    GeneralTask generalTaskToCalculate = pool.submit(new ResourceCalculator(tasksWithMaterialsToFinish, controller,
-                            localWarehouse, distantWarehouse, g)).get();
-                    GeneralTask generalTaskToShow = pool.submit(new TaskPlanner(generalTaskToCalculate, controller)).get();
-                    pool.submit(new TaskDisplay(generalTaskToShow, controller));
-                }
-//                pool.submit(controller.getControllor());
-                Instant end = Instant.now();
-                System.out.println("***** Total Time to proces" + tasksWithMaterialsToFinish.get(0).getName() + " Group of tasks is " +
-                        Duration.between(start, end).toMillis() + "********");
-            } catch (Exception E) {
-                E.printStackTrace();
+        // Build a fixed number of thread pool
+        try {
+            while (tasksWithMaterialsToFinish.iterator().hasNext()) {
+                GeneralTask generalTaskToCalculate = new ResourceCalculator(
+                        this.controller, this.localWarehouse, this.distantWarehouse, tasksWithMaterialsToFinish.poll()).call();
+                GeneralTask generalTaskToShow = new TaskPlanner(generalTaskToCalculate, controller).call();
+                new TaskDisplay(generalTaskToShow, controller).call();
             }
+        } catch (Exception F) {
+            F.printStackTrace();
+            Instant end = Instant.now();
+            System.out.println("***** Total Time to proces" + tasksWithMaterialsToFinish + " Group of tasks is " +
+                    Duration.between(start, end).toMillis() + "********");
         }
     }
 }
-

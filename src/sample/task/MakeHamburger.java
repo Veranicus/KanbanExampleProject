@@ -11,14 +11,14 @@ import java.util.Map;
 
 public class MakeHamburger extends GeneralTask {
 
-    public MakeHamburger(String name, TaskProduct typeOfTasksProduct, int quantityToProduce) {
-        super(name, typeOfTasksProduct, quantityToProduce);
+    public MakeHamburger(String name, TaskProduct typeOfTasksProduct, int quantityToProduce, int index) {
+        super(name, typeOfTasksProduct, quantityToProduce, index);
         Map<AbsMaterial, Integer> ingredients = new HashMap<>();
         ingredients.put(new Bun(), 2 * quantityToProduce);
         ingredients.put(new Beef(), 1 * quantityToProduce);
         ingredients.put(new Cheese(), 3 * quantityToProduce);
         this.setMaterialsRequired(ingredients);
-        this.setMinProductionInterval(1500);
-        this.setMaxProducitonInterval(1800);
+        this.setMinProductionInterval(5000);
+        this.setMaxProducitonInterval(8000);
     }
 }

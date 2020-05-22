@@ -56,7 +56,7 @@ public class LocalWarehouse implements Warehouse {
     }
 
     @Override
-    public Integer provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems) {
+    public synchronized Integer provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems) {
         Integer returnQuantity = 0;
 //        System.out.println("Providing " + generalMaterial.getName() + " of quantity " +
 //                localIngredients.get(generalMaterial));

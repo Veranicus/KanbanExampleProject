@@ -5,13 +5,12 @@ import sample.task.GeneralTask;
 import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
-import java.util.List;
-import java.util.concurrent.ExecutorService;
+import java.util.Queue;
 
 public interface ProductionLine {
 
-    void processMultipleTasks(List<GeneralTask> makeBreadTasksToStart, Controller controller,
-                              LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse, ExecutorService pool);
+    void processOneTask(Queue<GeneralTask> makeBreadTasksToStart, Controller controller,
+                        LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse);
 
 
 }

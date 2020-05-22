@@ -1,6 +1,5 @@
 package sample.production_line;
 
-import javafx.application.Platform;
 import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
@@ -9,8 +8,6 @@ import sample.task.task_product.TaskProduct;
 import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -61,7 +58,7 @@ public class Controllor implements Callable {
     }
 
     public static boolean controlTask(GeneralTask generalTask) {
-        if (DelayUtil.getRandomDoubleBetweenRange(1, 100) <= 40) {
+        if (DelayUtil.getRandomDoubleBetweenRange(1, 100) <= 5) {
             return false;
         } else return true;
     }
@@ -99,25 +96,25 @@ public class Controllor implements Callable {
 
     @Override
     public Object call() throws Exception {
-        Thread.sleep(1000);
-        Instant start = Instant.now();
-        if (!faultyTasks.isEmpty()) {
-            try {
-                for (GeneralTask g : faultyTasks) {
-                    Platform.runLater(() -> controller.vBox2.getChildren().add(new Text(g.getName())));
-                    Thread.sleep(500);
-                    GeneralTask generalTaskToCalculate = pool.submit(new ResourceCalculator(faultyTasks, controller,
-                            localWarehouse, distantWarehouse, g)).get();
-                    GeneralTask generalTaskToShow = pool.submit(new TaskPlanner(generalTaskToCalculate, controller)).get();
-                    pool.submit(new TaskDisplay(generalTaskToShow, controller));
-                }
-                Instant end = Instant.now();
-                System.out.println("***** Total Time to proces" + faultyTasks.get(0).getName() + " Group of tasks is " +
-                        Duration.between(start, end).toMillis() + "********");
-            } catch (Exception E) {
-                E.printStackTrace();
-            }
-        }
+//        Thread.sleep(1000);
+//        Instant start = Instant.now();
+//        if (!faultyTasks.isEmpty()) {
+//            try {
+//                for (GeneralTask g : faultyTasks) {
+//                    Platform.runLater(() -> controller.vBox2.getChildren().add(new Text(g.getName())));
+//                    Thread.sleep(500);
+//                    GeneralTask generalTaskToCalculate = pool.submit(new ResourceCalculator(faultyTasks, controller,
+//                            localWarehouse, distantWarehouse, g)).get();
+//                    GeneralTask generalTaskToShow = pool.submit(new TaskPlanner(generalTaskToCalculate, controller)).get();
+//                    pool.submit(new TaskDisplay(generalTaskToShow, controller));
+//                }
+//                Instant end = Instant.now();
+//                System.out.println("***** Total Time to proces" + faultyTasks.get(0).getName() + " Group of tasks is " +
+//                        Duration.between(start, end).toMillis() + "********");
+//            } catch (Exception E) {
+//                E.printStackTrace();
+//            }
+//        }
         return null;
     }
 }
