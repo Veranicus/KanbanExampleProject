@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import sample.Controller;
+import sample.controllor.Controllor;
 import sample.task.GeneralTask;
 
 import java.util.concurrent.Callable;
@@ -30,6 +31,8 @@ public class TaskDisplay implements Callable<Boolean> {
         if (!Controllor.controlTask(taskToShow)) {
             System.out.println("CONTROLLER FOUND AN ERROR, PUTTING THIS TASK BACK TO PRODUCTION");
             controller.addFaultyTask(taskToShow);
+//            ResourceCalculator resourceCalculator = new ResourceCalculator(controller,controller.getLocalWarehouse(),
+//                    controller.getDistantWarehouse(), taskToShow, vbox, vbox);
 //            controller.getControllor().addFaultyTaskCount();
 //            controller.getControllor().addFaultyTask(taskToShow);
 //            controller.getControllor().turnGeneralTaskToRespectiveTextStack(taskToShow.getTypeOfTasksProduct());

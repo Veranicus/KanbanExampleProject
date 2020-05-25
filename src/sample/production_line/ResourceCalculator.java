@@ -36,21 +36,27 @@ public class ResourceCalculator implements Callable<GeneralTask> {
     }
 
 
+    public void setOnetaskToStart(GeneralTask onetaskToStart) {
+        this.onetaskToStart = onetaskToStart;
+    }
+
     @Override
     public synchronized GeneralTask call() throws Exception {
-        var ind1 = onetaskToStart.getName().toString().indexOf(' ');
-        var ind2 = onetaskToStart.getName().toString().indexOf(' ', ind1 + 1) + 1;
-        var index = Integer.parseInt(onetaskToStart.getName().toString().substring(ind2));
-        Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
-        onetaskToStart.setIndex(index);
+//        onetaskToStart.setIndex(index);
         if (!vBox1.getChildren().isEmpty()) {
+            Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
             Platform.runLater(() -> vBox1.getChildren().remove(0));
 //            for (Node t : controller.vBox2.getChildren()) {
 //                if (((Text) t).getText().contains(String.valueOf(onetaskToStart.getIndex()))) {
 //                    Platform.runLater(() -> controller.vBox2.getChildren().remove(t));
 //                }
 //            }
+        } else {
+            Platform.runLater(() -> vBox1.getChildren().add(new Text(onetaskToStart.getName())));
+            Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
+            Platform.runLater(() -> vBox1.getChildren().remove(0));
         }
+        ;
 //        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName() + " " +
 //                onetaskToStart.getIndex())));
         Platform.runLater(() -> vBox.getChildren().add(new Text(onetaskToStart.getName())));
