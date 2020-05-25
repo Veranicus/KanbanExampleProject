@@ -42,25 +42,15 @@ public class ResourceCalculator implements Callable<GeneralTask> {
 
     @Override
     public synchronized GeneralTask call() throws Exception {
-//        onetaskToStart.setIndex(index);
         if (!vBox1.getChildren().isEmpty()) {
             Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
             Platform.runLater(() -> vBox1.getChildren().remove(0));
-//            for (Node t : controller.vBox2.getChildren()) {
-//                if (((Text) t).getText().contains(String.valueOf(onetaskToStart.getIndex()))) {
-//                    Platform.runLater(() -> controller.vBox2.getChildren().remove(t));
-//                }
-//            }
         } else {
             Platform.runLater(() -> vBox1.getChildren().add(new Text(onetaskToStart.getName())));
             Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
             Platform.runLater(() -> vBox1.getChildren().remove(0));
         }
-        ;
-//        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName() + " " +
-//                onetaskToStart.getIndex())));
         Platform.runLater(() -> vBox.getChildren().add(new Text(onetaskToStart.getName())));
-//        readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse);
         System.out.println("********* All Materials Are Ready*********");
         System.out.println("********* Moving task to In Progress*********");
         return onetaskToStart;

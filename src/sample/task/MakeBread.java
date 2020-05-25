@@ -9,7 +9,7 @@ import sample.task.task_product.TaskProduct;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MakeBread extends GeneralTask implements Task {
+public class MakeBread extends GeneralTask {
 
     public MakeBread(String name, TaskProduct typeOfTasksProduct, int quantityToProduce, int index) {
         super(name, typeOfTasksProduct, quantityToProduce, index);

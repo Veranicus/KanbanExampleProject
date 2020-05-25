@@ -6,7 +6,6 @@ import sample.Controller;
 import sample.delay.DelayUtil;
 import sample.production_line.ProductionLineC;
 import sample.task.GeneralTask;
-import sample.task.task_product.TaskProduct;
 import sample.warehouse.DistantWarehouse;
 import sample.warehouse.LocalWarehouse;
 
@@ -86,7 +85,7 @@ public class Controllor implements Callable {
     }
 
     public static boolean controlTask(GeneralTask generalTask) {
-        if (DelayUtil.getRandomDoubleBetweenRange(1, 100) <= 5) {
+        if (DelayUtil.getRandomDoubleBetweenRange(1, 100) <= 20) {
             return false;
         } else return true;
     }
@@ -95,19 +94,6 @@ public class Controllor implements Callable {
         this.faultyTasks = faultyTasks;
     }
 
-    public void turnGeneralTaskToRespectiveTextStack(TaskProduct taskProduct) {
-        if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("bread")) {
-            controller.getTask1Display().add(new Text(taskProduct.getNameOfTaskProduct()));
-        } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("omelette")) {
-            controller.getTask1Display().add(new Text(taskProduct.getNameOfTaskProduct()));
-        } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("chickensoup")) {
-            controller.getTask1Display().add(new Text(taskProduct.getNameOfTaskProduct()));
-        } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("pizza")) {
-            controller.getTask1Display().add(new Text(taskProduct.getNameOfTaskProduct()));
-        } else if (taskProduct.getNameOfTaskProduct().equalsIgnoreCase("hamburger")) {
-            controller.getTask1Display().add(new Text(taskProduct.getNameOfTaskProduct()));
-        }
-    }
 
     public void addFaultyTaskCount() {
         this.numberOFTasksToFix++;
@@ -137,25 +123,6 @@ public class Controllor implements Callable {
             productionLineC.call();
             this.faultyTasks.clear();
         }
-//        Thread.sleep(1000);
-//        Instant start = Instant.now();
-//        if (!faultyTasks.isEmpty()) {
-//            try {
-//                for (GeneralTask g : faultyTasks) {
-//                    Platform.runLater(() -> controller.vBox2.getChildren().add(new Text(g.getName())));
-//                    Thread.sleep(500);
-//                    GeneralTask generalTaskToCalculate = pool.submit(new ResourceCalculator(faultyTasks, controller,
-//                            localWarehouse, distantWarehouse, g)).get();
-//                    GeneralTask generalTaskToShow = pool.submit(new TaskPlanner(generalTaskToCalculate, controller)).get();
-//                    pool.submit(new TaskDisplay(generalTaskToShow, controller));
-//                }
-//                Instant end = Instant.now();
-//                System.out.println("***** Total Time to proces" + faultyTasks.get(0).getName() + " Group of tasks is " +
-//                        Duration.between(start, end).toMillis() + "********");
-//            } catch (Exception E) {
-//                E.printStackTrace();
-//            }
-//        }
         return null;
     }
 }

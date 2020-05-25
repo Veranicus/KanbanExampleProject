@@ -26,11 +26,6 @@ public class DistantWarehouse implements Warehouse {
     }
 
     @Override
-    public Integer provideQuantityOfOneMaterial(AbsMaterial generalMaterial) {
-        return null;
-    }
-
-    @Override
     public synchronized Integer provideMultipleMaterials(AbsMaterial generalMaterial, int numberOfItems) {
         System.out.println(this.getClass().getSimpleName() + " Giving " + generalMaterial.getName() + " of quantity "
                 + numberOfItems);

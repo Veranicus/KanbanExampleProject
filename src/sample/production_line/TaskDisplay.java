@@ -31,18 +31,8 @@ public class TaskDisplay implements Callable<Boolean> {
         if (!Controllor.controlTask(taskToShow)) {
             System.out.println("CONTROLLER FOUND AN ERROR, PUTTING THIS TASK BACK TO PRODUCTION");
             controller.addFaultyTask(taskToShow);
-//            ResourceCalculator resourceCalculator = new ResourceCalculator(controller,controller.getLocalWarehouse(),
-//                    controller.getDistantWarehouse(), taskToShow, vbox, vbox);
-//            controller.getControllor().addFaultyTaskCount();
-//            controller.getControllor().addFaultyTask(taskToShow);
-//            controller.getControllor().turnGeneralTaskToRespectiveTextStack(taskToShow.getTypeOfTasksProduct());
             return false;
         } else {
-//            for (Node t : controller.vBox3.getChildren()) {
-//                if (((Text) t).getText().contains(String.valueOf(taskToShow.getIndex()))) {
-//                    Platform.runLater(() -> controller.vBox3.getChildren().remove(t));
-//                }
-//            }
             Platform.runLater(() -> controller.vBox4.getChildren().add(new Text(taskToShow.getName())));
             return true;
         }

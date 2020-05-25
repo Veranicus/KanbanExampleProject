@@ -13,12 +13,6 @@ import java.util.concurrent.ExecutorService;
 
 public class ProductionLineB implements ProductionLine, Callable<Object> {
 
-    //https://stackoverflow.com/questions/289434/how-to-make-a-java-thread-wait-for-another-threads-output
-    //https://stackoverflow.com/questions/289434/how-to-make-a-java-thread-wait-for-another-threads-output
-    //https://stackoverflow.com/questions/13784333/platform-runlater-and-task-in-javafx
-    //https://stackoverflow.com/questions/61854896/javafx-application-doesnt-add-elements-to-gui-after-finishing-tasks-from-differ
-
-
     private Queue<GeneralTask> oneTaskQueue;
     private Controller controller;
     private LocalWarehouse localWarehouse;
@@ -30,7 +24,6 @@ public class ProductionLineB implements ProductionLine, Callable<Object> {
 
     public ProductionLineB() {
     }
-
 
     public void setOneTaskQueue(Queue<GeneralTask> oneTaskQueue) {
         this.oneTaskQueue = oneTaskQueue;

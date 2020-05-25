@@ -6,7 +6,7 @@ import sample.task.task_product.TaskProduct;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class GeneralTask implements Task, Callable<GeneralTask> {
+public class GeneralTask implements Callable<GeneralTask> {
     private String name;
     private TaskProduct typeOfTasksProduct;
     private Map<AbsMaterial, Integer> materialsRequired;
