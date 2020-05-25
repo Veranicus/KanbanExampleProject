@@ -65,10 +65,13 @@ public class ProductionLineB implements ProductionLine, Callable<Object> {
         // Build a fixed number of thread pool
         try {
             while (tasksWithMaterialsToFinish.iterator().hasNext()) {
+                System.out.println(this.getClass().getSimpleName() + " IS MAKING " +
+                        tasksWithMaterialsToFinish.peek().getName());
                 GeneralTask generalTaskToCalculate = new ResourceCalculator(
-                        this.controller, this.localWarehouse, this.distantWarehouse, tasksWithMaterialsToFinish.poll()).call();
+                        this.controller, this.localWarehouse, this.distantWarehouse, tasksWithMaterialsToFinish.poll(),
+                        controller.vBox21, controller.vBox31).call();
                 GeneralTask generalTaskToShow = new TaskPlanner(generalTaskToCalculate, controller).call();
-                new TaskDisplay(generalTaskToShow, controller).call();
+                new TaskDisplay(generalTaskToShow, controller, controller.vBox31).call();
             }
         } catch (Exception F) {
             F.printStackTrace();

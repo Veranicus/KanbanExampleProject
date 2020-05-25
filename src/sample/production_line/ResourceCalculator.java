@@ -1,6 +1,7 @@
 package sample.production_line;
 
 import javafx.application.Platform;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import sample.Controller;
 import sample.delay.DelayUtil;
@@ -21,25 +22,39 @@ public class ResourceCalculator implements Callable<GeneralTask> {
     private DistantWarehouse distantWarehouse;
     private GeneralTask onetaskToStart;
     private long waitingTime = 0;
+    private VBox vBox1;
+    private VBox vBox;
 
     public ResourceCalculator(Controller controller, LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse,
-                              GeneralTask onetaskToStart) {
+                              GeneralTask onetaskToStart, VBox vBox1, VBox vBox) {
         this.controller = controller;
         this.localWarehouse = localWarehouse;
         this.distantWarehouse = distantWarehouse;
         this.onetaskToStart = onetaskToStart;
+        this.vBox1 = vBox1;
+        this.vBox = vBox;
     }
 
 
     @Override
-    public GeneralTask call() throws Exception {
-        if (!controller.vBox2.getChildren().isEmpty()) {
-            Platform.runLater(() -> controller.vBox2.getChildren().remove(onetaskToStart));
-        }
-        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName() + " " +
-                onetaskToStart.getIndex())));
-        readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse);
+    public synchronized GeneralTask call() throws Exception {
+        var ind1 = onetaskToStart.getName().toString().indexOf(' ');
+        var ind2 = onetaskToStart.getName().toString().indexOf(' ', ind1 + 1) + 1;
+        var index = Integer.parseInt(onetaskToStart.getName().toString().substring(ind2));
         Thread.sleep(readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse));
+        onetaskToStart.setIndex(index);
+        if (!vBox1.getChildren().isEmpty()) {
+            Platform.runLater(() -> vBox1.getChildren().remove(0));
+//            for (Node t : controller.vBox2.getChildren()) {
+//                if (((Text) t).getText().contains(String.valueOf(onetaskToStart.getIndex()))) {
+//                    Platform.runLater(() -> controller.vBox2.getChildren().remove(t));
+//                }
+//            }
+        }
+//        Platform.runLater(() -> controller.vBox3.getChildren().add(new Text(onetaskToStart.getName() + " " +
+//                onetaskToStart.getIndex())));
+        Platform.runLater(() -> vBox.getChildren().add(new Text(onetaskToStart.getName())));
+//        readyMaterialsForOneTask(this.onetaskToStart, this.localWarehouse, this.distantWarehouse);
         System.out.println("********* All Materials Are Ready*********");
         System.out.println("********* Moving task to In Progress*********");
         return onetaskToStart;
@@ -62,7 +77,7 @@ public class ResourceCalculator implements Callable<GeneralTask> {
                 distantWarehouse.setNumberOfItems(mapElement.getValue() - providedQuantity);
                 distantWarehouse.provideMultipleMaterials(mapElement.getKey(),
                         mapElement.getValue() - providedQuantity);
-                waitingTime += (long) DelayUtil.getRandomDoubleBetweenRange(50, 100);
+                waitingTime += (long) DelayUtil.getRandomDoubleBetweenRange(2000, 2500);
                 System.out.println("*******Total Waiting time: " + waitingTime + " miliseconds.********");
             }
         }

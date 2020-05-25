@@ -91,11 +91,11 @@
             <VBox fx:id="vBox1" prefHeight="519.0" prefWidth="197.0" />
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="271.0" layoutY="150.0" prefHeight="553.0" prefWidth="200.0">
-         <content>
-            <VBox fx:id="vBox2" prefHeight="541.0" prefWidth="192.0" />
-         </content>
-      </ScrollPane>
+       <ScrollPane layoutX="271.0" layoutY="150.0" prefHeight="151.0" prefWidth="200.0">
+           <content>
+               <VBox fx:id="vBox2" prefHeight="141.0" prefWidth="192.0"/>
+           </content>
+       </ScrollPane>
        <Text layoutX="312.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To Do">
            <font>
                <Font size="17.0"/>
@@ -106,9 +106,9 @@
                <Font size="17.0"/>
            </font>
        </Text>
-       <ScrollPane fx:id="scrollPane3" layoutX="512.0" layoutY="150.0" prefHeight="553.0" prefWidth="200.0">
+       <ScrollPane fx:id="scrollPane3" layoutX="512.0" layoutY="150.0" prefHeight="151.0" prefWidth="200.0">
            <content>
-               <VBox fx:id="vBox3" prefHeight="541.0" prefWidth="192.0"/>
+               <VBox fx:id="vBox3" prefHeight="135.0" prefWidth="192.0"/>
            </content>
        </ScrollPane>
        <ScrollPane layoutX="738.0" layoutY="150.0" prefHeight="553.0" prefWidth="200.0">
@@ -126,6 +126,26 @@
                <Font name="Arial" size="21.0"/>
            </font>
        </Text>
+       <ScrollPane fx:id="scrollPane31" layoutX="512.0" layoutY="351.0" prefHeight="151.0" prefWidth="200.0">
+           <content>
+               <VBox fx:id="vBox31" prefHeight="135.0" prefWidth="192.0"/>
+           </content>
+       </ScrollPane>
+       <ScrollPane fx:id="scrollPane311" layoutX="512.0" layoutY="552.0" prefHeight="151.0" prefWidth="200.0">
+           <content>
+               <VBox fx:id="vBox311" prefHeight="148.0" prefWidth="192.0"/>
+           </content>
+       </ScrollPane>
+       <ScrollPane layoutX="277.0" layoutY="351.0" prefHeight="151.0" prefWidth="200.0">
+           <content>
+               <VBox fx:id="vBox21" prefHeight="141.0" prefWidth="192.0"/>
+           </content>
+       </ScrollPane>
+       <ScrollPane layoutX="277.0" layoutY="552.0" prefHeight="151.0" prefWidth="200.0">
+           <content>
+               <VBox fx:id="vBox211" prefHeight="141.0" prefWidth="192.0"/>
+           </content>
+       </ScrollPane>
    </children>
    <effect>
       <Blend />

@@ -53,6 +53,16 @@ public class Controllor implements Callable {
         this.pool = pool;
     }
 
+    public Controllor(List<GeneralTask> faultyTasks, Controller controller,
+                      LocalWarehouse localWarehouse, DistantWarehouse distantWarehouse, ExecutorService pool, int numberOFTasksToFix) {
+        this.faultyTasks = faultyTasks;
+        this.controller = controller;
+        this.localWarehouse = localWarehouse;
+        this.distantWarehouse = distantWarehouse;
+        this.pool = pool;
+        this.numberOFTasksToFix = numberOFTasksToFix;
+    }
+
     public List<GeneralTask> getFaultyTasks() {
         return faultyTasks;
     }

@@ -18,7 +18,7 @@ public class MakePizza extends GeneralTask {
         ingredients.put(new Ham(), 1 * quantityToProduce);
         ingredients.put(new Tomato(), 4 * quantityToProduce);
         this.setMaterialsRequired(ingredients);
-        this.setMinProductionInterval(230);
+        this.setMinProductionInterval(600);
         this.setMaxProducitonInterval(731);
     }
 }

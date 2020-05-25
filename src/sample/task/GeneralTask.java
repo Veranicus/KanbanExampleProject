@@ -42,6 +42,10 @@ public class GeneralTask implements Task, Callable<GeneralTask> {
         this.maxProducitonInterval = maxProducitonInterval;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     public String getName() {
         return name;
     }

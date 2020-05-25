@@ -2,13 +2,12 @@ package sample.warehouse;
 
 import sample.material.*;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 //Local warehouse which is programmed to have some initial number of materials for the tasks which can be brought
 //in instantly
 public class LocalWarehouse implements Warehouse {
-
     Map<AbsMaterial, Integer> localIngredients;
 
     public Map<AbsMaterial, Integer> getLocalIngredients() {
@@ -20,7 +19,7 @@ public class LocalWarehouse implements Warehouse {
     }
 
     public LocalWarehouse() {
-        this.localIngredients = new HashMap<>();
+        this.localIngredients = new ConcurrentHashMap<>();
         localIngredients.put(new Flour(), 3);
         localIngredients.put(new Salt(), 1);
         localIngredients.put(new Water(), 5);

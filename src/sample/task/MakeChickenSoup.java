@@ -18,8 +18,8 @@ public class MakeChickenSoup extends GeneralTask {
         ingredients.put(new ChickenWing(), 3 * quantityToProduce);
         ingredients.put(new Water(), 3 * quantityToProduce);
         this.setMaterialsRequired(ingredients);
-        this.setMinProductionInterval(250);
-        this.setMaxProducitonInterval(425);
+        this.setMinProductionInterval(500);
+        this.setMaxProducitonInterval(514);
     }
 
     @Override
