@@ -18,7 +18,17 @@ public class MakeHamburger extends GeneralTask {
         ingredients.put(new Beef(), 1 * quantityToProduce);
         ingredients.put(new Cheese(), 3 * quantityToProduce);
         this.setMaterialsRequired(ingredients);
-        this.setMinProductionInterval(5000);
-        this.setMaxProducitonInterval(8000);
+        this.setMinProductionInterval(785);
+        this.setMaxProducitonInterval(1002);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

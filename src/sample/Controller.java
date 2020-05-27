@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import sample.controllor.Controllor;
 import sample.production_line.ProductionLineA;
 import sample.production_line.ProductionLineB;
 import sample.production_line.ProductionLineC;
@@ -53,8 +52,6 @@ public class Controller {
     @FXML
     public VBox vBox3;
     public ScrollPane scrollPane3;
-    @FXML
-    public Text textShow1;
     public VBox vBox4;
 
     Stack<Text> task1Display = new Stack<>();
@@ -83,22 +80,17 @@ public class Controller {
     }
 
     public void addFaultyTask(GeneralTask generalTask) {
-        controllor.addFaultyTaskCount();
         generalTask.setName(generalTask.getName() + "Fix");
         this.faultyTasks.add(generalTask);
-        System.out.println("FAULTY TASK COUNT " + controllor.getNumberOFTasksToFix());
     }
 
     public void clearFaultyTask() {
         this.faultyTasks = new ConcurrentLinkedQueue<>();
     }
 
-    int n = 10;
     ExecutorService pool = Executors.newFixedThreadPool(3);
     LocalWarehouse localWarehouse = new LocalWarehouse();
     DistantWarehouse distantWarehouse = new DistantWarehouse();
-    Controllor controllor = new Controllor(this, localWarehouse, distantWarehouse, pool, 5,
-            new ProductionLineC());
     @FXML
     Button button1 = new Button();
 
@@ -145,6 +137,7 @@ public class Controller {
                     while (!faultyTasks.isEmpty()) {
                         turnQueueOfTasksIntoTextStack(faultyTasks, faultyTasksDisplay);
                         Platform.runLater(() -> vBox211.getChildren().addAll(faultyTasksDisplay));
+                        Thread.sleep(10);
                         productionLine3.setOneTaskQueue(faultyTasks);
                         productionLine3.call();
                     }
@@ -153,6 +146,7 @@ public class Controller {
             } catch (InterruptedException f) {
                 f.printStackTrace();
             } finally {
+                pool.shutdown();
             }
         });
         taskThread.start();
@@ -200,11 +194,6 @@ public class Controller {
     @FXML
     public void initialize() {
 //        button1.setDisable(true);
-    }
-
-
-    public Controllor getControllor() {
-        return controllor;
     }
 
     public void buttonClickedRemove1(ActionEvent actionEvent) {

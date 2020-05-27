@@ -21,4 +21,6 @@ public class MakePizza extends GeneralTask {
         this.setMinProductionInterval(600);
         this.setMaxProducitonInterval(731);
     }
+
+
 }

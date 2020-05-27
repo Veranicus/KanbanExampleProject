@@ -22,4 +22,13 @@ public class MakeOmellete extends GeneralTask {
         this.setMaxProducitonInterval(1950);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
